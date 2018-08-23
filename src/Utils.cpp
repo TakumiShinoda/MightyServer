@@ -1,5 +1,33 @@
 #include "Utils.h"
 
+ChainArray Utils::analyzeQuery(String str){
+  std::vector<String> blocks;
+  std::vector<String> keys;
+  std::vector<String> values;
+  String block = "";
+
+  for(int i = 0; i < str.length(); i++){
+    if(str[i] == '&'){
+      blocks.push_back(block);
+      block = "";
+    }else{
+      block += str[i];
+      if(i == str.length() - 1) blocks.push_back(block);
+    }
+  }
+  for(int i = 0; i < blocks.size(); i++){
+    uint8_t equalPos = blocks[i].indexOf("=");
+
+    if(equalPos >= 0){
+      keys.push_back(blocks[i].substring(0, equalPos));
+      values.push_back(blocks[i].substring(equalPos + 1));
+    }
+  }
+  ChainArray result(keys, values);
+
+  return result;
+}
+
 std::array<String, 2> Utils::analyzeGetRequest(String request){
   std::array<String, 2> result;
   String path = "";
@@ -9,6 +37,7 @@ std::array<String, 2> Utils::analyzeGetRequest(String request){
   split(request, ' ', 1).indexOf("/") == 0 ? path = split(request, ' ', 1) : path = "";
   if(path.indexOf("?") >= 0){
     params = path.substring(path.indexOf("?") + 1);
+    path = path.substring(0, path.indexOf("?"));
   }
 
   result[0] = path;

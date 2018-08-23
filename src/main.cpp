@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include "local_property.h"
 #include "Utils.h"
+#include "ChainArray.h"
 
 #define TRY_CONNECT_AP 20
 
@@ -9,21 +10,32 @@ WiFiServer server(80);
 Utils Utils;
 
 void message_recive(){
+  String line = "";
+  String path = "";
+  String params = "";
   WiFiClient client = server.available();
-  if(client){
-    Serial.println("New Client");
+  
 
+  if(client){
     if(client.connected()){
       delay(100);
+      Serial.println("New Client");
       while(client.available()){
-        String line = client.readStringUntil('\r');
+        line = client.readStringUntil('\r');
+        path = "";
+        params = "";
 
         if(line.indexOf("GET") >= 0){
-          Serial.println(Utils.analyzeGetRequest(line)[0]);
-          Serial.println(Utils.analyzeGetRequest(line)[1]);
+          path = Utils.analyzeGetRequest(line)[0];
+          params = Utils.analyzeGetRequest(line)[1];
+
+          ChainArray queries = Utils.analyzeQuery(params);
+
+          Serial.println(queries.get("hoge"));
+          Serial.println(queries.get("fuga"));
         }
       }
-      client.println("hoge");
+      client.println(queries.get("hoge"));
       client.stop();
     }
   }
