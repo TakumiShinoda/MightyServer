@@ -5,6 +5,7 @@ ChainArray Utils::analyzeQuery(String str){
   std::vector<String> keys;
   std::vector<String> values;
   String block = "";
+  ChainArray result;
 
   for(int i = 0; i < str.length(); i++){
     if(str[i] == '&'){
@@ -23,7 +24,7 @@ ChainArray Utils::analyzeQuery(String str){
       values.push_back(blocks[i].substring(equalPos + 1));
     }
   }
-  ChainArray result(keys, values);
+  result.add(keys, values);
 
   return result;
 }

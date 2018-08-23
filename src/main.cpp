@@ -12,9 +12,8 @@ Utils Utils;
 void message_recive(){
   String line = "";
   String path = "";
-  String params = "";
+  ChainArray queries;
   WiFiClient client = server.available();
-  
 
   if(client){
     if(client.connected()){
@@ -22,20 +21,19 @@ void message_recive(){
       Serial.println("New Client");
       while(client.available()){
         line = client.readStringUntil('\r');
+        queries.clear();
         path = "";
-        params = "";
 
         if(line.indexOf("GET") >= 0){
           path = Utils.analyzeGetRequest(line)[0];
-          params = Utils.analyzeGetRequest(line)[1];
+          queries = Utils.analyzeQuery(Utils.analyzeGetRequest(line)[1]);
 
-          ChainArray queries = Utils.analyzeQuery(params);
-
+          Serial.print("Path: ");
+          Serial.println(path);
+          Serial.print("Query \'hoge\': ");
           Serial.println(queries.get("hoge"));
-          Serial.println(queries.get("fuga"));
         }
       }
-      client.println(queries.get("hoge"));
       client.stop();
     }
   }

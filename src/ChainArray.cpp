@@ -10,6 +10,10 @@ void ChainArray::add(std::vector<String> keys, std::vector<String> values){
   }
 }
 
+void ChainArray::clear(){
+  chainArrays.clear();
+}
+
 String ChainArray::get(String key){
   for(int i = 0; i < chainArrays.size(); i++){
     if(chainArrays[i].key == key) return chainArrays[i].value;

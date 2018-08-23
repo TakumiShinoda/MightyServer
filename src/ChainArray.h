@@ -8,6 +8,7 @@ class ChainArray{
   public:
     String get(String key);
     void add(std::vector<String> keys, std::vector<String> values);
+    void clear();
 
   private:
     struct chainArray{
