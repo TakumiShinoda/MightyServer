@@ -14,13 +14,14 @@ void message_recive(){
     Serial.println("New Client");
 
     if(client.connected()){
+      delay(100);
       while(client.available()){
         String line = client.readStringUntil('\r');
+
         if(line.indexOf("GET") >= 0){
           Serial.println(Utils.analyzeGetRequest(line)[0]);
           Serial.println(Utils.analyzeGetRequest(line)[1]);
         }
-        delay(100);
       }
       client.println("hoge");
       client.stop();
