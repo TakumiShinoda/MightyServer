@@ -2,12 +2,20 @@
 
 void ChainArray::add(std::vector<String> keys, std::vector<String> values){
   for(int i = 0; i < keys.size(); i++){
-    struct chainArray element;
-
-    element.key = keys[i];
-    element.value = values[i];
-    chainArrays.push_back(element);
+    addElement(keys[i], values[i]);
   }
+}
+
+void ChainArray::add(String key, String value){
+  addElement(key, value);
+}
+
+void ChainArray::addElement(String key, String value){
+  struct chainArray element;
+
+  element.key = key;
+  element.value = value;
+  chainArrays.push_back(element);
 }
 
 void ChainArray::clear(){
