@@ -32,9 +32,11 @@ void message_recive(){
           Serial.println(path);
           Serial.print("Query \'hoge\': ");
           Serial.println(queries.get("hoge"));
+
+          client.println("hoge");
+          client.stop();
         }
       }
-      client.stop();
     }
   }
 }
