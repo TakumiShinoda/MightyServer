@@ -1,8 +1,8 @@
 #include <Arduino.h>
-#include <WiFi.h>
 #include "local_property.h"
 #include "Utils.h"
 #include "ChainArray.h"
+#include "ServerObject.h"
 
 #define TRY_CONNECT_AP 50
 
