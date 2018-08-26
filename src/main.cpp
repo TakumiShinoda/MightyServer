@@ -4,7 +4,7 @@
 #include "Utils.h"
 #include "ChainArray.h"
 
-#define TRY_CONNECT_AP 20
+#define TRY_CONNECT_AP 50
 
 WiFiServer server(80);
 Utils Utils;
@@ -68,11 +68,33 @@ bool connectAP(){
   return true;
 }
 
+bool checkNetwork(){
+  bool result = false;
+
+  for(int i = 0; i < WiFi.scanNetworks(); i++){
+    String ssid = WiFi.SSID(i);
+
+    if(ssid == SSID){
+      result = true;
+      break;
+    }
+  }
+
+  return result;
+}
+
 void setup() {
   Serial.begin(115200);
+  WiFi.disconnect(true);
+
+  if(!checkNetwork()){
+    Serial.println("Not found Network SSID around here.");
+    return;
+  }
 
   if(!connectAP()){
     Serial.println("Fail to connect.");
+    return;
   }
 
   server.begin();
