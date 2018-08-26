@@ -18,6 +18,16 @@ void ChainArray::addElement(String key, String value){
   chainArrays.push_back(element);
 }
 
+std::vector<String> ChainArray::keys(){
+  std::vector<String> result;
+
+  for(int i = 0; i < chainArrays.size(); i++){
+    result.push_back(chainArrays[i].key);
+  }
+
+  return result;
+}
+
 void ChainArray::clear(){
   chainArrays.clear();
 }

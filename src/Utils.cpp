@@ -29,8 +29,9 @@ ChainArray Utils::analyzeQuery(String str){
   return result;
 }
 
-std::array<String, 2> Utils::analyzeGetRequest(String request){
-  std::array<String, 2> result;
+ChainArray Utils::analyzeGetRequest(String request){
+  ChainArray result;
+  ChainArray queries;
   String path = "";
   String params = "";
 
@@ -41,8 +42,8 @@ std::array<String, 2> Utils::analyzeGetRequest(String request){
     path = path.substring(0, path.indexOf("?"));
   }
 
-  result[0] = path;
-  result[1] = params;
+  result.add("path", path);
+  result.add("params", params);
 
   return result;
 }

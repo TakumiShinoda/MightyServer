@@ -9,6 +9,7 @@ class ChainArray{
     String get(String key);
     void add(std::vector<String> keys, std::vector<String> values);
     void add(String key, String value);
+    std::vector<String> keys();
     void clear();
 
   private:
