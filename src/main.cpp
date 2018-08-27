@@ -6,49 +6,8 @@
 
 #define TRY_CONNECT_AP 50
 
-WiFiServer server(80);
+ServerObject ServerObject;
 Utils Utils;
-
-void message_recive(){
-  String line = "";
-  String path = "";
-  ChainArray request;
-  ChainArray queries;
-  std::vector<String> keys;
-  WiFiClient client = server.available();
-
-  if(client){
-    if(client.connected()){
-      delay(100);
-      Serial.println("New Client");
-      while(client.available()){
-        line = client.readStringUntil('\r');
-        path = "";
-
-        if(line.indexOf("GET") >= 0){
-          request = Utils.analyzeGetRequest(line);
-          path = request.get("path");
-          queries = Utils.analyzeQuery(request.get("params"));
-          keys = queries.keys();
-
-          Serial.print("Path: ");
-          Serial.println(path);
-
-          for(int i = 0; i < keys.size(); i++){
-            Serial.print("Query \'"+ keys[i] +"\': ");
-            Serial.println(queries.get(keys[i]));
-          }
-
-          client.println("hoge");
-          client.stop();
-
-          request.clear();
-          queries.clear();
-        }
-      }
-    }
-  }
-}
 
 bool connectAP(){
   uint8_t cnt = 0;
@@ -97,9 +56,13 @@ void setup() {
     return;
   }
 
-  server.begin();
+  ServerObject.addServer(80);
+  ServerObject.addServer(88);
+  ServerObject.openServer(80);
+  ServerObject.openServer(88);
 }
 
 void loop() {
-  message_recive();
+  ServerObject.requestHandle(80);
+  ServerObject.requestHandle(88);
 }
