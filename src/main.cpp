@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "freertos/FreeRTOS.h"
 #include "local_property.h"
 #include "Utils.h"
 #include "ChainArray.h"
@@ -8,6 +9,14 @@
 
 ServerObject ServerObject;
 Utils Utils;
+
+void checkHeap(void *arg){
+  while(true){
+    Serial.print("Heap: ");
+    Serial.println(esp_get_free_heap_size());
+    delay(5000);
+  }
+}
 
 bool connectAP(){
   uint8_t cnt = 0;
@@ -45,6 +54,7 @@ bool checkNetwork(){
 void setup() {
   Serial.begin(115200);
   WiFi.disconnect(true);
+  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
   if(!checkNetwork()){
     Serial.println("Not found Network SSID around here.");
