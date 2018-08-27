@@ -5,6 +5,8 @@
 #include "ChainArray.h"
 #include "ServerObject.h"
 
+#include "pages/addApi.h"
+
 #define TRY_CONNECT_AP 50
 
 ServerObject ServerObject;
@@ -67,16 +69,14 @@ void setup() {
   }
 
   ServerObject.addServer(80);
-  ServerObject.addServer(88);
 
+  ServerObject.setResponse(80, "/admin/addapi", addApi_html);
   ServerObject.setResponse(80, "/hogehoge", "hogehoge.com");
   ServerObject.setResponse(80, "/fugafuga", "fugafuga.com");
 
   ServerObject.openServer(80);
-  ServerObject.openServer(88);
 }
 
 void loop() {
   ServerObject.requestHandle(80);
-  ServerObject.requestHandle(88);
 }
