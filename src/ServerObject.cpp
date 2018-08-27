@@ -20,16 +20,18 @@ void ServerObject::openServer(uint8_t port){
 }
 
 void ServerObject::requestHandle(uint8_t port){
+  uint8_t serverPos = 0;
   String line = "";
   String path = "";
   ChainArray request;
   ChainArray queries;
-  std::vector<String> keys;
   WiFiClient client;
+  std::vector<String> keys;
 
   for(int i = 0; i < Servers.size(); i++){
     if(Servers[i].port == port){
-      client = Servers[i].server.available();
+      serverPos = i;
+      client = Servers[serverPos].server.available();
       break;
     }
   }
@@ -56,13 +58,35 @@ void ServerObject::requestHandle(uint8_t port){
             Serial.println(queries.get(keys[i]));
           }
 
-          client.println("hoge");
+          if(Servers[serverPos].Responses.size() == 0) {
+            client.println("404");
+          }else{
+            for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
+              if(path == Servers[serverPos].Responses[i].url){
+                client.println(Servers[serverPos].Responses[i].response);
+                break;
+              }
+              if(i == Servers[serverPos].Responses.size() - 1) client.println("404");
+            }
+          }
+
           client.stop();
 
           request.clear();
           queries.clear();
         }
       }
+    }
+  }
+}
+
+void ServerObject::setResponse(uint8_t port, String url, String response){
+  struct Response respObj;
+
+  for(int i = 0; i < Servers.size(); i++){
+    if(Servers[i].port == port){
+      Servers[i].setResponse(url, response);
+      break;
     }
   }
 }

@@ -13,11 +13,25 @@ class ServerObject{
     void addServer(uint8_t port);
     void openServer(uint8_t port);
     void requestHandle(uint8_t port);
+    void setResponse(uint8_t port, String url, String response);
 
   private:
+    struct Response{
+      String url;
+      String response;
+    };
     struct Server{
       uint8_t port;
       WiFiServer server;
+      String response;
+      std::vector<struct Response> Responses;
+      void setResponse(String url, String response){
+        struct Response resObj;
+
+        resObj.url = url;
+        resObj.response = response;
+        Responses.push_back(resObj);
+      };
     };
     std::vector<struct Server> Servers;
     Utils *utils = new Utils();

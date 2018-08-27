@@ -58,6 +58,10 @@ void setup() {
 
   ServerObject.addServer(80);
   ServerObject.addServer(88);
+
+  ServerObject.setResponse(80, "/hogehoge", "hogehoge.com");
+  ServerObject.setResponse(80, "/fugafuga", "fugafuga.com");
+
   ServerObject.openServer(80);
   ServerObject.openServer(88);
 }
