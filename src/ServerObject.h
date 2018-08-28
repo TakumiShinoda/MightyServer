@@ -16,11 +16,13 @@ class ServerObject{
     void openServer(std::vector<uint8_t> ports);
     void openAllServers();
     void requestHandle(uint8_t port);
+    void requestHandle(std::vector<uint8_t> ports);
     void setResponse(uint8_t port, String url, String response);
 
   private:
     void addServer_proc(uint8_t port);
     void openServer_proc(uint8_t port);
+    void requestHandle_proc(uint8_t port);
     struct Response{
       String url;
       String response;

@@ -72,12 +72,10 @@ void setup() {
   ServerObject.addServer(Ports);
 
   ServerObject.setResponse(80, "/admin/addapi", addApi_html);
-  ServerObject.setResponse(80, "/hogehoge", "hogehoge.com");
-  ServerObject.setResponse(80, "/fugafuga", "fugafuga.com");
 
   ServerObject.openAllServers();
 }
 
 void loop() {
-  ServerObject.requestHandle(80);
+  ServerObject.requestHandle({80});
 }

@@ -46,6 +46,16 @@ void ServerObject::openServer(std::vector<uint8_t> ports){
 }
 
 void ServerObject::requestHandle(uint8_t port){
+  requestHandle_proc(port);
+}
+
+void ServerObject::requestHandle(std::vector<uint8_t> ports){
+  for(int i = 0; i < ports.size(); i++){
+    requestHandle_proc(ports[i]);
+  }
+}
+
+void ServerObject::requestHandle_proc(uint8_t port){
   uint8_t serverPos = 0;
   String line = "";
   String path = "";
@@ -84,7 +94,13 @@ void ServerObject::requestHandle(uint8_t port){
             Serial.println(queries.get(keys[i]));
           }
 
-          if(Servers[serverPos].Responses.size() == 0) {
+          Serial.print("port: ");
+          Serial.println(Servers[serverPos].port);
+
+          Serial.print("size: ");
+          Serial.println(Servers[serverPos].Responses.size());
+
+          if(Servers[serverPos].Responses.size() == 0){
             client.println("404");
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
