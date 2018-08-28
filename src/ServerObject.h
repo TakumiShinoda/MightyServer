@@ -6,7 +6,9 @@
 #include <vector>
 #include "ChainArray.h"
 #include "Utils.h"
+#include "Html.h"
 
+class Html;
 class Utils;
 class ServerObject{
   public:
@@ -17,7 +19,7 @@ class ServerObject{
     void openAllServers();
     void requestHandle(uint8_t port);
     void requestHandle(std::vector<uint8_t> ports);
-    void setResponse(uint8_t port, String url, String response);
+    void setResponse(uint8_t port, String url, Html *response);
 
   private:
     void addServer_proc(uint8_t port);
@@ -26,17 +28,19 @@ class ServerObject{
     struct Response{
       String url;
       String response;
+      void (*prevCallback)(ChainArray);
     };
     struct Server{
       uint8_t port;
       WiFiServer server;
-      String response;
       std::vector<struct Response> Responses;
-      void setResponse(String url, String response){
+      void setResponse(String url, Html *response){
         struct Response resObj;
+        Html *test = response;
 
         resObj.url = url;
-        resObj.response = response;
+        resObj.response = response->getHtml();
+        resObj.prevCallback = response->htmlObj.prev;
         Responses.push_back(resObj);
       };
     };

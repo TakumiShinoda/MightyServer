@@ -89,11 +89,6 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.print("Path: ");
           Serial.println(path);
 
-          for(int i = 0; i < keys.size(); i++){
-            Serial.print("Query \'"+ keys[i] +"\': ");
-            Serial.println(queries.get(keys[i]));
-          }
-
           Serial.print("port: ");
           Serial.println(Servers[serverPos].port);
 
@@ -105,6 +100,7 @@ void ServerObject::requestHandle_proc(uint8_t port){
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
+                Servers[serverPos].Responses[i].prevCallback(queries);
                 client.println(Servers[serverPos].Responses[i].response);
                 break;
               }
@@ -122,9 +118,7 @@ void ServerObject::requestHandle_proc(uint8_t port){
   }
 }
 
-void ServerObject::setResponse(uint8_t port, String url, String response){
-  struct Response respObj;
-
+void ServerObject::setResponse(uint8_t port, String url, Html *response){
   for(int i = 0; i < Servers.size(); i++){
     if(Servers[i].port == port){
       Servers[i].setResponse(url, response);
