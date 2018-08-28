@@ -11,6 +11,7 @@
 
 ServerObject ServerObject;
 Utils Utils;
+std::vector<uint8_t> Ports = {80, 88, 90};
 
 void checkHeap(void *arg){
   while(true){
@@ -68,13 +69,13 @@ void setup() {
     return;
   }
 
-  ServerObject.addServer(80);
+  ServerObject.addServer(Ports);
 
   ServerObject.setResponse(80, "/admin/addapi", addApi_html);
   ServerObject.setResponse(80, "/hogehoge", "hogehoge.com");
   ServerObject.setResponse(80, "/fugafuga", "fugafuga.com");
 
-  ServerObject.openServer(80);
+  ServerObject.openAllServers();
 }
 
 void loop() {

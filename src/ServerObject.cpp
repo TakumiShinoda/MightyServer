@@ -1,6 +1,6 @@
 #include "ServerObject.h"
 
-void ServerObject::addServer(uint8_t port){
+void ServerObject::addServer_proc(uint8_t port){
   struct Server server;
   WiFiServer s(port);
 
@@ -10,12 +10,38 @@ void ServerObject::addServer(uint8_t port){
   Servers.push_back(server);
 }
 
-void ServerObject::openServer(uint8_t port){
+void ServerObject::addServer(uint8_t port){
+  addServer_proc(port);
+}
+
+void ServerObject::addServer(std::vector<uint8_t> ports){
+  for(int i = 0; i < ports.size(); i++){
+    addServer_proc(ports[i]);
+  }
+}
+
+void ServerObject::openServer_proc(uint8_t port){
   for(int i = 0; i < Servers.size(); i++){
     if(Servers[i].port == port){
       Servers[i].server.begin();
       break;
     }
+  }
+}
+
+void ServerObject::openAllServers(){
+  for(int i = 0; i < Servers.size(); i++){
+    Servers[i].server.begin();
+  }
+}
+
+void ServerObject::openServer(uint8_t port){
+  openServer_proc(port);
+}
+
+void ServerObject::openServer(std::vector<uint8_t> ports){
+  for(int i = 0; i < ports.size(); i++){
+    openServer_proc(ports[i]);
   }
 }
 

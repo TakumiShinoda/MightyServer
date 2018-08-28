@@ -11,11 +11,16 @@ class Utils;
 class ServerObject{
   public:
     void addServer(uint8_t port);
+    void addServer(std::vector<uint8_t> ports);
     void openServer(uint8_t port);
+    void openServer(std::vector<uint8_t> ports);
+    void openAllServers();
     void requestHandle(uint8_t port);
     void setResponse(uint8_t port, String url, String response);
 
   private:
+    void addServer_proc(uint8_t port);
+    void openServer_proc(uint8_t port);
     struct Response{
       String url;
       String response;
