@@ -96,19 +96,17 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.println(Servers[serverPos].Responses.size());
 
           if(Servers[serverPos].Responses.size() == 0){
-            client.println("404");
+            sendGetResponse(&client, "404", "404");
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
                 Servers[serverPos].Responses[i].prevCallback(queries);
-                client.println(Servers[serverPos].Responses[i].response);
+                sendGetResponse(&client, Servers[serverPos].Responses[i].response, "200");
                 break;
               }
-              if(i == Servers[serverPos].Responses.size() - 1) client.println("404");
+              if(i == Servers[serverPos].Responses.size() - 1) sendGetResponse(&client, "404", "404");
             }
           }
-
-          client.stop();
 
           request.clear();
           queries.clear();
@@ -116,6 +114,18 @@ void ServerObject::requestHandle_proc(uint8_t port){
       }
     }
   }
+}
+
+void ServerObject::sendGetResponse(WiFiClient *client, String html, String status){
+  String contentLength = String(html.length());
+  String statusResp = "HTTP/1.1 " + status + " OK";
+  String contentLengthResp = "Content-Length: " + contentLength;
+  String connectionResp = "Connection: close";
+  String contentTypeResp = "Content-Type: text/html";
+  String newLine = "\r\n";
+
+  client->print(statusResp + newLine + contentLengthResp + newLine + connectionResp + newLine +contentTypeResp + newLine + newLine + html);
+  client->stop();
 }
 
 void ServerObject::setResponse(uint8_t port, String url, Html *response){
