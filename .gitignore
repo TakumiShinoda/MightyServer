@@ -3,3 +3,6 @@
 .clang_complete
 .gcc-flags.json
 local_property.h
+node_modules
+package-lock.json
+dist

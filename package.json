@@ -1,0 +1,35 @@
+{
+  "name": "mightyserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TakumiShinoda/MightyServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TakumiShinoda/MightyServer/issues"
+  },
+  "homepage": "https://github.com/TakumiShinoda/MightyServer#readme",
+  "devDependencies": {
+    "express": "^4.16.3",
+    "gulp": "^4.0.0",
+    "gulp-notify": "^3.2.0",
+    "gulp-plumber": "^1.2.0",
+    "gulp-pug": "^4.0.1",
+    "path": "^0.12.7",
+    "webpack": "^4.17.1",
+    "webpack-stream": "^5.1.1"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1"
+  }
+}
