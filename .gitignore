@@ -3,6 +3,12 @@
 .clang_complete
 .gcc-flags.json
 local_property.h
+<<<<<<< HEAD
 .vscode/.browse.c_cpp.db*
 .vscode/c_cpp_properties.json
 .vscode/launch.json
+=======
+node_modules
+package-lock.json
+dist
+>>>>>>> 0d4630dff44fa43ff420e45b3592f2ff9f7634e5
