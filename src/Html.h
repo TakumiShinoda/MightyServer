@@ -9,11 +9,11 @@ class Html{
   private:
     struct HtmlObject{
       String html;
-      void (*prev)(ChainArray);
+      void (*prev)(ChainArray, String);
     };
 
   public:
-    Html(String html, void (*prev)(ChainArray));
+    Html(String html, void (*prev)(ChainArray, String));
     String getHtml();
     struct HtmlObject htmlObj;
 };

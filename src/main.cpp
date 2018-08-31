@@ -56,16 +56,18 @@ bool checkNetwork(){
   return result;
 }
 
-void test(ChainArray queries){
+void test(ChainArray queries, String respHtml){
   std::vector<String> keys = queries.keys();
 
   for(int i = 0; i < keys.size(); i++){
     Serial.print("Query \'"+ keys[i] +"\': ");
     Serial.println(queries.get(keys[i]));
   }
+
+  Serial.println(respHtml);
 }
 
-void setup() {
+void setup(){
   Serial.begin(115200);
   WiFi.disconnect(true);
 
@@ -88,6 +90,6 @@ void setup() {
   ServerObject.openAllServers();
 }
 
-void loop() {
+void loop(){
   ServerObject.requestHandle({80});
 }

@@ -100,7 +100,7 @@ void ServerObject::requestHandle_proc(uint8_t port){
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
-                Servers[serverPos].Responses[i].prevCallback(queries);
+                Servers[serverPos].Responses[i].prevCallback(queries, Servers[serverPos].Responses[i].response);
                 sendGetResponse(&client, Servers[serverPos].Responses[i].response, "200");
                 break;
               }
