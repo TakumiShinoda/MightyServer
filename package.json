@@ -6,7 +6,8 @@
   "directories": {
     "lib": "lib"
   },
-  "scripts": {
+  "scripts": { 
+    "start": "gulp start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
