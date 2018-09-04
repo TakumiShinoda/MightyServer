@@ -9,12 +9,12 @@ const ex = require('express');
 const Root = './www/dist';
 const webpackConfig = require('./webpack.config');
 const pugOptions = {
-  pretty: true
+  pretty: false
 }
 
 gulp.task("webpack-compile", () => {
   return webpackStream(webpackConfig, webpack)
-    .pipe(gulp.dest('./www/dist/addApi'));
+    .pipe(gulp.dest('./www/dist/addApi'))
 });
 
 gulp.task('pug-compile', () =>{
@@ -43,4 +43,4 @@ gulp.task('open-server', () => {
   })
 })
 
-gulp.task('start', gulp.series(gulp.parallel('pug-compile', 'webpack-compile'), 'open-server', 'watcher'));
+gulp.task('start', gulp.series('pug-compile', 'open-server', 'watcher'));
