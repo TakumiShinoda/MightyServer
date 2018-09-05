@@ -6,10 +6,9 @@
 #include "ChainArray.h"
 #include "ServerObject.h"
 #include "Html.h"
+#include "WifiConnection.h"
 
 #include "pages/addApi.h"
-
-#define TRY_CONNECT_AP 50
 
 ServerObject ServerObject;
 Utils Utils;
@@ -21,39 +20,6 @@ void checkHeap(void *arg){
     Serial.println(esp_get_free_heap_size());
     delay(5000);
   }
-}
-
-bool connectAP(){
-  uint8_t cnt = 0;
-
-  WiFi.begin(SSID, PASS);
-  while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
-    delay(500);
-    Serial.print(".");
-    cnt += 1;
-  }
-  if(WiFi.status() != WL_CONNECTED) return false;
-
-  Serial.println("\nWiFi connected.");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  return true;
-}
-
-bool checkNetwork(){
-  bool result = false;
-
-  for(int i = 0; i < WiFi.scanNetworks(); i++){
-    String ssid = WiFi.SSID(i);
-
-    if(ssid == SSID){
-      result = true;
-      break;
-    }
-  }
-
-  return result;
 }
 
 void test(ChainArray queries, String respHtml){
@@ -69,7 +35,6 @@ void test(ChainArray queries, String respHtml){
 
 void setup(){
   Serial.begin(115200);
-  WiFi.disconnect(true);
 
   if(!checkNetwork()){
     Serial.println("Not found Network SSID around here.");
