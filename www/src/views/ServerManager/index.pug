@@ -1,0 +1,85 @@
+html
+  head
+    meta(name="viewport" content="width=device-width")
+    title Server Manager
+    style.
+      html, body{
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+        padding: 0;
+        background: rgb(255, 250, 240) !important;
+      }
+
+      #header{
+        width: 100%;
+        background: rgb(86, 61, 124);
+      }
+
+      #pageTitle{
+        color: white;
+        font-size: 6vh;
+        margin: 0;
+        margin-left: 6%;
+      }
+
+      #container{
+        width: 85%;
+        height: 100%;
+        margin: auto;
+        padding: 10px;
+        background: rgb(152, 214, 250);
+        overflow: scroll;
+      }
+
+      #serverTable{
+        border-collapse: collapse;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        margin: auto;
+        width: 95%;
+      }
+
+      #serverTable tr{
+        height: 8vh;
+      }
+
+      #serverTable tr th{
+        background: black;
+        color: white;
+        line-height: 5vh;
+        width: 40%;
+      }
+
+      #serverTable tr td{
+        overflow: scroll;
+        height: 8vh;
+        line-height: 5vh;
+        width: 60%;
+      }
+    script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js")
+    link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js", integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl", crossorigin="anonymous")
+    script.
+  body
+    div#header
+      h1#pageTitle Server Manager
+    hr(style="margin: 0;")
+    div#container
+      h3#subTitle Server Information
+      hr
+      table.table#serverTable
+        tr
+          th Server Name
+          td MightyServer
+        tr
+          th Version
+          td Ver. 0.0.1
+        tr
+          th Heaps
+          td 250000 Bytes
+        tr
+          th APIs
+          td 24 APIs
+        tr
+          th Ports Opened
+          td 3 Ports
