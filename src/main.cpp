@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <vector>
+// #include "../lib/HTTPClient/src/HTTPClient.h"
+#include <HTTPClient.h>
 #include "freertos/FreeRTOS.h"
 #include "local_property.h"
 #include "Utils.h"
@@ -24,11 +26,19 @@ void checkHeap(void *arg){
 
 void test(ChainArray queries, String respHtml){
   std::vector<String> keys = queries.keys();
+  HTTPClient http;
 
   for(int i = 0; i < keys.size(); i++){
     Serial.print("Query \'"+ keys[i] +"\': ");
     Serial.println(queries.get(keys[i]));
   }
+
+  http.setUserAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.52 Safari/537.36");
+  http.begin("https://www.google.co.jp");
+  int httpCode = http.GET();
+
+  Serial.println(httpCode);
+  httpCode > 0 ? respHtml = http.getString() : respHtml = "Failed";
 
   Serial.println(respHtml);
 }
