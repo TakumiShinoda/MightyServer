@@ -67,3 +67,13 @@ String Utils::split(String target, char sep, uint8_t index){
 
   return results[index];
 }
+
+std::vector<uint8_t> Utils::vector_find(std::vector<String> target, String str){
+  std::vector<uint8_t> result;
+
+  for(int i = 0; i < target.size(); i++){
+    if(target[i] == str) result.push_back(i);
+  }
+
+  return result;
+}

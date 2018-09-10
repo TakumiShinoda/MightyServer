@@ -29,7 +29,7 @@ class ServerObject{
     struct Response{
       String url;
       String response;
-      void (*prevCallback)(ChainArray, String);
+      void (*prevCallback)(ChainArray, String*);
     };
     struct Server{
       uint8_t port;

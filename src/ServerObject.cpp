@@ -100,8 +100,10 @@ void ServerObject::requestHandle_proc(uint8_t port){
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
-                Servers[serverPos].Responses[i].prevCallback(queries, Servers[serverPos].Responses[i].response);
-                sendGetResponse(&client, Servers[serverPos].Responses[i].response, "200");
+                String respHtml = Servers[serverPos].Responses[i].response;
+
+                Servers[serverPos].Responses[i].prevCallback(queries, &respHtml);
+                sendGetResponse(&client, respHtml, "200");
                 break;
               }
               if(i == Servers[serverPos].Responses.size() - 1) sendGetResponse(&client, "404", "404");
