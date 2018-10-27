@@ -4,6 +4,7 @@ bool connectAP(){
   uint8_t cnt = 0;
 
   WiFi.disconnect(true);
+  delay(1000);
   WiFi.begin(SSID, PASS);
   while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
     delay(500);

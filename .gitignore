@@ -7,3 +7,5 @@ local_property.h
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 node_modules
+.vscode/
+include/

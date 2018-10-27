@@ -7,12 +7,12 @@
 #include "ChainArray.h"
 #include "ServerObject.h"
 #include "Html.h"
+#include "ESPIFFS.h"
 #include "WifiConnection.h"
-
-#include "pages/addApi.h"
 
 ServerObject ServerObject;
 Utils Utils;
+ESPIFFS espiffs;
 std::vector<uint8_t> Ports = {80};
 
 void checkHeap(void *arg){
@@ -57,8 +57,15 @@ void reflectionApiCallback(ChainArray params, String *respHtml){
   httpCode > 0 ? *(respHtml) = http.getString() : *(respHtml) = "Failed";
 }
 
+void empty(ChainArray params, String *respHtml){
+}
+
 void setup(){
   Serial.begin(115200);
+  
+  if(!espiffs.begin()){
+    Serial.println("SPIFFS failed");
+  }
 
   if(!checkNetwork()){
     Serial.println("Not found Network SSID around here.");
@@ -72,7 +79,7 @@ void setup(){
 
   xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
-  Html addApiPage(addApi_html, test);
+  Html addApiPage(espiffs.readFile("/addApi.html"), test);
   Html reflectionApi(String(" "), reflectionApiCallback);
 
   ServerObject.addServer(80);
