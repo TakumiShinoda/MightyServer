@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <SD.h>
 #include <vector>
 #include <HTTPClient.h>
 #include "freertos/FreeRTOS.h"
@@ -8,6 +9,7 @@
 #include "ServerObject.h"
 #include "Html.h"
 #include "ESPIFFS.h"
+
 #include "WifiConnection.h"
 
 ServerObject ServerObject;
@@ -21,17 +23,6 @@ void checkHeap(void *arg){
     Serial.println(esp_get_free_heap_size());
     delay(5000);
   }
-}
-
-void test(ChainArray queries, String *respHtml){
-  std::vector<String> keys = queries.keys();
-
-  for(int i = 0; i < keys.size(); i++){
-    Serial.print("Query \'"+ keys[i] +"\': ");
-    Serial.println(queries.get(keys[i]));
-  }
-
-  Serial.println(*(respHtml));
 }
 
 void reflectionApiCallback(ChainArray params, String *respHtml){
@@ -57,11 +48,20 @@ void reflectionApiCallback(ChainArray params, String *respHtml){
   httpCode > 0 ? *(respHtml) = http.getString() : *(respHtml) = "Failed";
 }
 
+void fromESPIFFS(ChainArray params, String *path){
+  *(path) = espiffs.readFile(*(path));
+}
+
 void empty(ChainArray params, String *respHtml){
 }
 
 void setup(){
   Serial.begin(115200);
+  delay(1000);
+
+  if(!SD.begin(5)){
+    Serial.println("SD failed");
+  }
   
   if(!espiffs.begin()){
     Serial.println("SPIFFS failed");
@@ -79,13 +79,13 @@ void setup(){
 
   xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
-  Html addApiPage(espiffs.readFile("/addApi.html"), test);
   Html reflectionApi(String(" "), reflectionApiCallback);
+  Html addApiPage("/addApi.html", fromESPIFFS);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
-  ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
+  ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.openAllServers();
 }
 
