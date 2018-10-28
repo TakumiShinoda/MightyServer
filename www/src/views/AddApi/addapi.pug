@@ -1,0 +1,87 @@
+html
+  head 
+    title API Manager
+    style.
+      html, body{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background: rgb(255, 250, 240) !important;
+      }
+      
+      #header{
+        width: 100%;
+        background: rgb(86, 61, 124);
+      }
+
+      #pageTitle{
+        color: white;
+        font-size: 6vh;
+        margin: 0;
+        margin-left: 6%;
+      }
+
+      #container{
+        width: 85%;
+        height: 100%; 
+        margin: auto;
+        padding: 10px;
+        background: rgb(152, 214, 250);
+      }
+
+      #forms{
+        font-size: 2.6vh;
+        width: 90%;
+        margin-left: 6%;
+      }
+
+      #pathInput{
+        font-size: 2.6vh;
+        height: 5vh;
+      }
+
+      #ownerInput{
+        font-size: 2.6vh;
+        height: 5vh;
+      }
+
+      #submitBtn{ 
+        float: right;
+        font-size: 3vh;
+      }
+
+      #subTitle{
+        font-size: 4vh;
+      }
+
+      #cancelBtn{
+        float: right;
+        font-size: 3vh;
+        margin-left: 0.5vw;
+      }
+    script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js")
+    link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
+    script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js", integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl", crossorigin="anonymous")
+    script.
+      $(document).ready(() => {
+        $('#cancelBtn').on('click', () => {
+          window.location.href = "index.html";
+        })
+      });
+  body
+    div#header
+      h1#pageTitle APIManager
+    hr(style="margin: 0;")
+    div#container
+      h3#subTitle New API
+      hr
+      div#forms
+        div.form-group#pathInputForm
+          label#pathInputLabel Path: 
+          input.form-control(type="text" value="/")#pathInput
+        div.form-group#ownerInputForm
+          label#ownerInputLabel Owner:
+          input.form-control#ownerInput(type="text")
+        div
+          div.btn.btn-danger#cancelBtn Cancel
+          div.btn.btn-primary#submitBtn Done
