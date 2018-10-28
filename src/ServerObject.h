@@ -20,6 +20,7 @@ class ServerObject{
     void requestHandle(uint8_t port);
     void requestHandle(std::vector<uint8_t> ports);
     void setResponse(uint8_t port, String url, Html *response);
+    void setNotFound(String resp);
 
   private:
     void addServer_proc(uint8_t port);
@@ -45,6 +46,7 @@ class ServerObject{
         Responses.push_back(resObj);
       };
     };
+    String notFoundResp = "404";
     std::vector<struct Server> Servers;
     Utils *utils = new Utils();
 };

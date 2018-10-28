@@ -82,6 +82,7 @@ void setup(){
   Html addApiPage(espiffs.readFile("/addApi.html"), test);
   Html reflectionApi(String(" "), reflectionApiCallback);
 
+  ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);

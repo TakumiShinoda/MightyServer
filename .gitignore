@@ -9,3 +9,4 @@ local_property.h
 node_modules
 .vscode/
 include/
+.DS_Store

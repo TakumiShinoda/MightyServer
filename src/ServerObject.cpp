@@ -96,7 +96,7 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.println(Servers[serverPos].Responses.size());
 
           if(Servers[serverPos].Responses.size() == 0){
-            sendGetResponse(&client, "404", "404");
+            sendGetResponse(&client, notFoundResp, "404");
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
@@ -106,7 +106,7 @@ void ServerObject::requestHandle_proc(uint8_t port){
                 sendGetResponse(&client, respHtml, "200");
                 break;
               }
-              if(i == Servers[serverPos].Responses.size() - 1) sendGetResponse(&client, "404", "404");
+              if(i == Servers[serverPos].Responses.size() - 1) sendGetResponse(&client, notFoundResp, "404");
             }
           }
 
@@ -137,4 +137,8 @@ void ServerObject::setResponse(uint8_t port, String url, Html *response){
       break;
     }
   }
+}
+
+void ServerObject::setNotFound(String resp){
+  notFoundResp = resp;
 }
