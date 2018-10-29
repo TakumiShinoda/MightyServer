@@ -1,95 +1,12 @@
 html
   head
+    meta(charset="utf-8")
     meta(name="viewport" content="width=device-width")
     title API Manager
-    style.
-      html, body{
-        width: 100%;
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-        background: rgb(255, 250, 240) !important;
-      }
-
-      #header{
-        width: 100%;
-        background: rgb(86, 61, 124);
-      }
-
-      #pageTitle{
-        color: white;
-        font-size: 6vh;
-        margin: 0;
-        margin-left: 6%;
-      }
-
-      #container{
-        width: 85%;
-        height: 100%;
-        margin: auto;
-        padding: 10px;
-        background: rgb(152, 214, 250);
-        overflow: scroll;
-      } 
-
-      #subTitle{
-        font-size: 4vh;
-      }
-
-      #addBtn{
-        position: fixed;
-        margin: 0;
-        padding: 0;
-        width: 10vh;
-        height: 10vh;
-        background: rgb(0, 80, 120);
-        color: rgb(255, 255, 255);
-        border-radius: 10vh;
-        bottom: 1;
-        right: 1;
-      }
- 
-      #addBtn:hover{
-        cursor: pointer;
-        opacity: 0.8;
-      }
-
-      #addBtnText{
-        display: block;
-        width: 100%;
-        height: 100%;
-        line-height: 10vh;
-        text-align: center;
-        font-size: 50px;
-      }
-
-      #apiTable{
-        border-collapse: collapse;
-        margin: auto;
-        width: 95%;
-      }
-
-      #apiTableRow{
-        height: 8vh;
-      }
-
-      #apiTableCellText{
-        line-height: 8vh;
-      }
-
-      #apiTableCellBtn{
-        margin-top: 2vh;
-      }
     script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js")
     link(href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css", rel="stylesheet", integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO", crossorigin="anonymous")
     script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js", integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl", crossorigin="anonymous")
     script(src="./index.js")
-    script.
-      $(document).ready(() => { 
-        $('#addBtn').on('click', () => {
-          window.location.href = "addapi.html";
-        });
-      })
   body
     div#addBtn
       div#addBtnText +
@@ -97,27 +14,28 @@ html
       h1#pageTitle APIManager
     hr(style="margin: 0;")
     div#container
-      h3#subTitle API List
-      hr
-      table.table#apiTable()
-        thead.thead-dark
-          tr
-            th(width="30%") Path
-            th(width="20%") Created
-            th(width="20%") Update
-            th(width="20%") Owner
-            th(width="10%")
-        tr#apiTableRow
-          td#apiTableCellText admin/apimanager
-          td#apiTableCellText 2018/8/2/12:00
-          td#apiTableCellText 2018/8/13/1:00
-          td#apiTableCellText Prime
-          td
-            div.btn.btn-danger#apiTableCellBtn delete 
-        tr#apiTableRow
-          td#apiTableCellText admin/apimanager
-          td#apiTableCellText 2018/8/2/12:00
-          td#apiTableCellText 2018/8/13/1:00
-          td#apiTableCellText Prime
-          td
-            div.btn.btn-danger#apiTableCellBtn delete
+      div#apiListField
+        h3#subTitle API List
+        hr
+        table.table#apiTable()
+          thead.thead-dark
+            tr
+              th(width="30%") Path
+              th(width="20%") Created
+              th(width="20%") Update
+              th(width="20%") Owner
+              th(width="10%")
+          tr#apiTableRow
+            td#apiTableCellText admin/apimanager
+            td#apiTableCellText 2018/8/2/12:00
+            td#apiTableCellText 2018/8/13/1:00
+            td#apiTableCellText Prime
+            td
+              div.btn.btn-danger#apiTableCellBtn delete 
+          tr#apiTableRow
+            td#apiTableCellText admin/apimanager
+            td#apiTableCellText 2018/8/2/12:00
+            td#apiTableCellText 2018/8/13/1:00
+            td#apiTableCellText Prime
+            td
+              div.btn.btn-danger#apiTableCellBtn delete

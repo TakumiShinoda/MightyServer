@@ -13,9 +13,14 @@ const pugOptions = {
 }
 const webpackEntries = [
   {
-    path: './www/src/javascript/AddApi/index.js',
+    path: './www/src/javascript/AddApi/index.entry.js',
     dist: './www/dist/AddApi',
     name: 'index.js'
+  },
+  {
+    path: './www/src/javascript/AddApi/add.entry.js',
+    dist: './www/dist/AddApi',
+    name: 'add.js'
   }
 ]
 

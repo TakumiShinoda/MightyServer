@@ -1,0 +1,39 @@
+#container{
+  width: 85%;
+  min-height: 100%;
+  height: auto;
+  margin: auto;
+  padding: 10px;
+  background: rgb(152, 214, 250);
+} 
+
+#forms{
+  font-size: 2.6vh;
+  width: 90%;
+  margin-left: 6%;
+}
+
+#pathInput{
+  font-size: 2.6vh;
+  height: 5vh;
+}
+
+#ownerInput{
+  font-size: 2.6vh;
+  height: 5vh;
+}
+
+#submitBtn{ 
+  float: right;
+  font-size: 3vh;
+}
+
+#subTitle{
+  font-size: 4vh;
+}
+
+#cancelBtn{
+  float: right;
+  font-size: 3vh;
+  margin-left: 0.5vw;
+}

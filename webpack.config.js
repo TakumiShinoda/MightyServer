@@ -1,5 +1,4 @@
 const path = require('path');
-const  UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   config: (entry, name) => {
@@ -9,13 +8,6 @@ module.exports = {
       output: {
         filename: name,
       },
-      optimization: {
-        minimizer: [
-          new UglifyJSPlugin({ 
-            uglifyOptions: {compress: {drop_console: true}},
-          }),
-        ],
-      }, 
       module: {
         rules: [
           {
