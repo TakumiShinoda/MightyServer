@@ -25,6 +25,9 @@ void checkHeap(void *arg){
   }
 }
 
+void empty(ChainArray params, String *respHtml){
+}
+
 void reflectionApiCallback(ChainArray params, String *respHtml){
   std::vector<String> paramsKeys = params.keys();
   std::vector<uint8_t> keyHostFinds = Utils.vector_find(paramsKeys, String("host"));
@@ -52,7 +55,21 @@ void fromESPIFFS(ChainArray params, String *path){
   *(path) = espiffs.readFile(*(path));
 }
 
-void empty(ChainArray params, String *respHtml){
+void addApiCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> htmlKeysFound = Utils.vector_find(keys, "html");
+  std::vector<uint8_t> pathKeysFound = Utils.vector_find(keys, "path");
+  String html = htmlKeysFound.size() > 0 ? queries.get(keys[htmlKeysFound[0]]) : "Service not available.";
+  String path = pathKeysFound.size() > 0 ? queries.get(keys[pathKeysFound[0]]) : "";
+  Html targetApi(html, empty);
+
+  if(path == ""){
+    *(response) = "(0)Failed to upload.";
+  }else{
+    path = path.substring(0, 1) != "/" ? "/" + path : path;
+    *(response) = "(1)Service started.";
+    ServerObject.setResponse(80, path, &targetApi);
+  }
 }
 
 void setup(){
@@ -81,11 +98,13 @@ void setup(){
 
   Html reflectionApi(String(" "), reflectionApiCallback);
   Html addApiPage("/addApi.html", fromESPIFFS);
+  Html serviceAddApi(String(""), addApiCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
+  ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
   ServerObject.openAllServers();
 }
 
