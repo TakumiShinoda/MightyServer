@@ -133,7 +133,11 @@ void ServerObject::sendGetResponse(WiFiClient *client, String html, String statu
 void ServerObject::setResponse(uint8_t port, String url, Html *response){
   for(int i = 0; i < Servers.size(); i++){
     if(Servers[i].port == port){
-      Servers[i].setResponse(url, response);
+      if(Servers[i].findPath(url) >= 0){
+        Servers[i].updateResponse(url, response);
+      }else{
+        Servers[i].setResponse(url, response);
+      }
       break;
     }
   }

@@ -45,6 +45,23 @@ class ServerObject{
         resObj.prevCallback = response->htmlObj.prev;
         Responses.push_back(resObj);
       };
+      int16_t findPath(String path){
+        int16_t result = -1;
+
+        for(int i = 0; i < Responses.size(); i++){
+          if(Responses[i].url == path) result = i;
+        }
+        return result;
+      };
+      void updateResponse(String url, Html *response){
+        int16_t objIndex = findPath(url);
+
+        if(objIndex >= 0){
+          Responses[objIndex].url = url;
+          Responses[objIndex].response = response->getHtml();
+          Responses[objIndex].prevCallback = response->htmlObj.prev;
+        }
+      };
     };
     String notFoundResp = "404";
     std::vector<struct Server> Servers;
