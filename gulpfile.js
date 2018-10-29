@@ -11,10 +11,24 @@ const webpackConfig = require('./webpack.config');
 const pugOptions = {
   pretty: false
 }
+const webpackEntries = [
+  {
+    path: './www/src/javascript/AddApi/index.js',
+    dist: './www/dist/AddApi',
+    name: 'index.js'
+  }
+]
 
 gulp.task("webpack-compile", () => {
-  return webpackStream(webpackConfig, webpack)
-    .pipe(gulp.dest('./www/dist/addApi'))
+  return new Promise((res) => {
+    for(var i = 0; i < webpackEntries.length; i++){
+      let entry = webpackEntries[i];
+
+      webpackStream(webpackConfig.config(entry.path, entry.name), webpack)
+        .pipe(gulp.dest(webpackEntries[i].dist));
+    }
+    res();
+  });
 });
 
 gulp.task('pug-compile', () =>{
@@ -43,4 +57,4 @@ gulp.task('open-server', () => {
   })
 })
 
-gulp.task('start', gulp.series('pug-compile', 'open-server', 'watcher'));
+gulp.task('start', gulp.series('pug-compile', 'open-server', 'webpack-compile', 'watcher'));
