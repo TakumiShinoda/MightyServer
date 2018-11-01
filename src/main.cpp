@@ -76,36 +76,37 @@ void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  if(!SD.begin(5)){
-    Serial.println("SD failed");
-  }
+  Serial.println(Utils.ints2utf8({0x61,0xE4, 0xB8, 0xB8}));
+  // if(!SD.begin(5)){
+  //   Serial.println("SD failed");
+  // }
   
-  if(!espiffs.begin()){
-    Serial.println("SPIFFS failed");
-  }
+  // if(!espiffs.begin()){
+  //   Serial.println("SPIFFS failed");
+  // }
 
-  if(!checkNetwork()){
-    Serial.println("Not found Network SSID around here.");
-    return;
-  }
+  // if(!checkNetwork()){
+  //   Serial.println("Not found Network SSID around here.");
+  //   return;
+  // }
 
-  if(!connectAP()){
-    Serial.println("Fail to connect.");
-    return;
-  }
+  // if(!connectAP()){
+  //   Serial.println("Fail to connect.");
+  //   return;
+  // }
 
-  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
+  // xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
-  Html reflectionApi(String(" "), reflectionApiCallback);
-  Html addApiPage("/addApi.html", fromESPIFFS);
-  Html serviceAddApi(String(""), addApiCallback);
+  // Html reflectionApi(String(" "), reflectionApiCallback);
+  // Html addApiPage("/addApi.html", fromESPIFFS);
+  // Html serviceAddApi(String(""), addApiCallback);
 
-  ServerObject.setNotFound(espiffs.readFile("/404.html"));
-  ServerObject.addServer(80);
-  ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
-  ServerObject.setResponse(80, "/reflect", &reflectionApi);
-  ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
-  ServerObject.openAllServers();
+  // ServerObject.setNotFound(espiffs.readFile("/404.html"));
+  // ServerObject.addServer(80);
+  // ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
+  // ServerObject.setResponse(80, "/reflect", &reflectionApi);
+  // ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
+  // ServerObject.openAllServers();
 }
 
 void loop(){

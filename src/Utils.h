@@ -12,6 +12,7 @@ class Utils{
     String split(String target, char sep, uint8_t index);
     ChainArray analyzeQuery(String str);
     std::vector<uint8_t> vector_find(std::vector<String> target, String str);
+    String ints2utf8(std::vector<unsigned int> data);
 };
 
 #endif

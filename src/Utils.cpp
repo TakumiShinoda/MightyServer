@@ -77,3 +77,27 @@ std::vector<uint8_t> Utils::vector_find(std::vector<String> target, String str){
 
   return result;
 }
+
+String Utils::ints2utf8(std::vector<unsigned int> data){
+  unsigned long long size = data.size();
+  unsigned long long i = 0;
+  String result = "";
+
+  while(i < size){
+    if(data[i] <= 127){
+      result += char(data[i]);
+      i += 1;
+    }else if(data[i] <= 223){
+      result += char(data[i]);
+      result += char(data[i + 1]);
+      i += 2;
+    }else if(data[i] <= 239){
+      result += char(data[i]);
+      result += char(data[i + 1]);
+      result += char(data[i + 2]);
+      i += 3;
+    }
+  }
+
+  return result;
+}
