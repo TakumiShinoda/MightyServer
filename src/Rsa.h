@@ -1,6 +1,7 @@
 #ifndef Rsa_h
 #define Rsa_h
 
+#include <Arduino.h>
 #include <iostream>
 #include <random>
 #include <math.h>
@@ -22,7 +23,7 @@ class Rsa{
 
   public:
     Rsa(unsigned long long _seed1, unsigned long long _seed2);
-    std::vector<unsigned long long> encryption(std::string data);
+    std::vector<unsigned long> encryption(String data);
     std::vector<unsigned long long> decryption(std::vector<unsigned long long> data);
     std::vector<unsigned int> divideNumber(unsigned long long val);
     unsigned long long squmod(unsigned long long base, unsigned long long sq, unsigned long long mod);

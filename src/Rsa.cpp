@@ -36,14 +36,14 @@ Rsa::Rsa(unsigned long long _seed1, unsigned long long _seed2){
   UniteKey = n;
 }
 
-std::vector<unsigned long long> Rsa::encryption(std::string data){
-  std::vector<unsigned long long> result;
+std::vector<unsigned long> Rsa::encryption(String data){
+  std::vector<unsigned long> result;
 
   std::cout << "encryption" << std::endl;
-  for(int i = 0; i < data.size(); i++){
-    unsigned long long encrypted = squmod((unsigned int)char(data[i]), PublicKey, UniteKey);
+  for(int i = 0; i < data.length(); i++){
+    unsigned long encrypted = squmod((unsigned int)char(data[i]), PublicKey, UniteKey);
 
-    std::cout << (unsigned int)char(data[i]) << std::endl;
+    std::cout << "enc: " << (unsigned int)char(data[i]) << std::endl;
     std::cout << encrypted << std::endl;
     result.push_back(encrypted);
   }
