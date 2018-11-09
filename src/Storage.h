@@ -12,6 +12,8 @@ class Storage{
     Storage(uint8_t cs);
     bool begin();
     bool available();
+    String readFile(String fn);
+    bool writeFile(String fn, String *data);  
 };
 
 #endif

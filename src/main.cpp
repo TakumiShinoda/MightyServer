@@ -9,13 +9,17 @@
 #include "ServerObject.h"
 #include "Html.h"
 #include "ESPIFFS.h"
+#include "Storage.h"
 
 #include "WifiConnection.h"
+
+#define SDCS 5
 
 ServerObject ServerObject;
 Utils Utils;
 ESPIFFS espiffs;
 std::vector<uint8_t> Ports = {80};
+Storage st(SDCS);
 
 void checkHeap(void *arg){
   while(true){
@@ -76,10 +80,21 @@ void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  Serial.println(Utils.ints2utf8({0x61,0xE4, 0xB8, 0xB8}));
-  // if(!SD.begin(5)){
-  //   Serial.println("SD failed");
-  // }
+  if(!st.begin()){
+    Serial.println("Storage failed");
+  }else{
+    Serial.println("Storage available");
+  }
+
+  String test = "hahaha";
+
+  if(st.writeFile("hoge.txt", &test)){
+    Serial.println("Suc");
+  }else{
+    Serial.println("failed");
+  }
+
+  // Serial.println(Utils.ints2utf8({0x61,0xE4, 0xB8, 0xB8}));
   
   // if(!espiffs.begin()){
   //   Serial.println("SPIFFS failed");

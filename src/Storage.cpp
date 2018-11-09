@@ -17,3 +17,22 @@ bool Storage::begin(){
 bool Storage::available(){
   return Available;
 }
+
+String Storage::readFile(String fn){ 
+  String result = "";
+
+  return result;
+}
+
+bool Storage::writeFile(String fn, String *data){
+  Serial.println(Available);
+  if(!Available) return false;
+  File f = SD.open('/' + fn, FILE_WRITE); 
+
+  if(f.available()){
+    f.println(*(data));
+    return true;
+  }else{
+    return false;
+  }
+}
