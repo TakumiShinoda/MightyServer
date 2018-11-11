@@ -78,7 +78,7 @@ std::vector<uint8_t> Utils::vector_find(std::vector<String> target, String str){
   return result;
 }
 
-String Utils::ints2utf8(std::vector<unsigned int> data){
+String Utils::ints2utf8(std::vector<uint8_t> data){
   unsigned long long size = data.size();
   unsigned long long i = 0;
   String result = "";

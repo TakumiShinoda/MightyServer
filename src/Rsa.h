@@ -24,7 +24,7 @@ class Rsa{
   public:
     Rsa(unsigned long long _seed1, unsigned long long _seed2);
     unsigned long encryption(char data);
-    std::vector<unsigned long long> decryption(std::vector<unsigned long long> data);
+    uint8_t decryption(unsigned long data);
     std::vector<unsigned int> divideNumber(unsigned long long val);
     unsigned long long squmod(unsigned long long base, unsigned long long sq, unsigned long long mod);
 };

@@ -39,25 +39,19 @@ Rsa::Rsa(unsigned long long _seed1, unsigned long long _seed2){
 unsigned long Rsa::encryption(char data){
   unsigned long encrypted = squmod((unsigned int)data, PublicKey, UniteKey);
 
-  std::cout << "enc: " << (unsigned int)data << std::endl;
+  std::cout << "encInput: " << (unsigned int)data << std::endl;
   std::cout << encrypted << std::endl;
 
   return encrypted;
 }
 
-std::vector<unsigned long long> Rsa::decryption(std::vector<unsigned long long> data){
-  std::vector<unsigned long long> result;
+uint8_t Rsa::decryption(unsigned long data){
+ unsigned long long decrypted = squmod(data, SecretKey, UniteKey);
 
-  std::cout << "decryption" << std::endl;
-  for(int i = 0; i < data.size(); i++){
-    unsigned long long decrypted = squmod((unsigned long long)data[i], SecretKey, UniteKey);
-
-    std::cout << (unsigned long long)data[i] << std::endl;
-    std::cout << decrypted << std::endl;
-    result.push_back(decrypted);
-  }
+  std::cout << "decInput: " << data << std::endl;
+  std::cout << decrypted << std::endl;
   
-  return result;
+  return decrypted;
 }
 
 bool Rsa::isPrime(unsigned long long num){
