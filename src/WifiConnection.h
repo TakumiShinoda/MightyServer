@@ -3,6 +3,7 @@
 bool connectAP(){
   uint8_t cnt = 0;
 
+  WiFi.mode(WIFI_MODE_STA);
   WiFi.disconnect(true);
   delay(1000);
   WiFi.begin(SSID, PASS);
