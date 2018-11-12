@@ -25,9 +25,8 @@ String Storage::readFile(String fn){
 }
 
 bool Storage::writeFile(String fn, String *data){
-  Serial.println(Available);
   if(!Available) return false;
-  File f = SD.open('/' + fn, FILE_WRITE); 
+  File f = SD.open('/' + fn, FILE_WRITE);
 
   if(f.available()){
     f.println(*(data));

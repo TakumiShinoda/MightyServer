@@ -107,12 +107,7 @@ void setup(){
 
   if(!connectAP()){
     Serial.println("Fail to connect.");
-    Serial.println("Start AP mode.");
-    WiFi.mode(WIFI_MODE_AP);
-    WiFi.softAP("mighty", "mighty");
-    delay(1000);
-    WiFi.softAPConfig(ip, ip, subnet);
-    WiFi.softAPIP();
+    return;
   }
 
   Html reflectionApi(String(" "), reflectionApiCallback);
