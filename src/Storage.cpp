@@ -26,7 +26,26 @@ String Storage::readFile(String fn){
 
 bool Storage::writeFile(String fn, String *data){
   if(!Available) return false;
-  File f = SD.open('/' + fn, FILE_WRITE);
+  String filename = "";
+  String dirname = "";
+  File f;
+
+  for(int i = 0; i < fn.length(); i++){
+    char c = fn[fn.length() - 1 - i];
+
+    if(c == '/'){
+      dirname = fn.substring(0, fn.length() - i - 1);
+      break;
+    }else{
+      filename = c + filename;
+    }
+  }
+
+  if(!exist(dirname)){
+    mkdir(dirname);
+  }
+
+  f = SD.open('/' + fn, FILE_WRITE);
 
   if(f.available()){
     f.println(*(data));

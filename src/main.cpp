@@ -106,19 +106,17 @@ void setup(){
     Serial.println("failed");
   }
 
-  String test_fn = "sys/bootloader.txt";
+  // if(st.mkdir("sys")){
+  //   Serial.println("mk suc");
+  // }else{
+  //   Serial.println("mk failed");
+  // }
 
-  if(st.mkdir("sys")){
-    Serial.println("mk suc");
-  }else{
-    Serial.println("mk failed");
-  }
-
-  if(st.exist("sys")){
-    Serial.println("exist");
-  }else{
-    Serial.println("no exist");
-  }
+  // if(st.exist("sys")){
+  //   Serial.println("exist");
+  // }else{
+  //   Serial.println("no exist");
+  // }
 
   // for(int i = 0; i < test_fn.length(); i++){
   //   String fn = Utils.split(test_fn, '/', i);
