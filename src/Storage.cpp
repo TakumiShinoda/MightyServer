@@ -35,3 +35,13 @@ bool Storage::writeFile(String fn, String *data){
     return false;
   }
 }
+
+bool Storage::exist(String fn){
+  if(!Available) return false;
+  return SD.exists('/' + fn);
+}
+
+bool Storage::mkdir(String fn){
+  if(!Available) return false;
+  return SD.mkdir('/' + fn);
+}

@@ -52,6 +52,7 @@ String Utils::split(String target, char sep, uint8_t index){
   std::vector<String> results;
   uint8_t resultsLength = 0;
   String block = "";
+  String result = "";
 
   for(int i = 0; i < target.length(); i++){
     if(target[i] == sep){
@@ -62,10 +63,12 @@ String Utils::split(String target, char sep, uint8_t index){
     }
   }
 
+  results.push_back(block);
   resultsLength = results.size();
-  if(index > resultsLength) index = 0;
+  if(index > resultsLength - 1) result = "";
+  else result = results[index];
 
-  return results[index];
+  return result;
 }
 
 std::vector<uint8_t> Utils::vector_find(std::vector<String> target, String str){

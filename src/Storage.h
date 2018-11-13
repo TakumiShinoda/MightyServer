@@ -13,7 +13,9 @@ class Storage{
     bool begin();
     bool available();
     String readFile(String fn);
-    bool writeFile(String fn, String *data);  
+    bool writeFile(String fn, String *data);
+    bool exist(String fn);  
+    bool mkdir(String fn);
 };
 
 #endif

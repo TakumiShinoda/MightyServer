@@ -94,34 +94,64 @@ void setup(){
     Serial.println("Storage Initializing");
   }
 
-  if(st.writeFile("hoge.txt", &test)){
+  if(st.writeFile("access_check.txt", &test)){
     Serial.println("Suc");
   }else{
     Serial.println("failed");
   }
 
-  if(!checkNetwork()){
-    Serial.println("Not found Network SSID around here.");
-    return;
+  if(st.writeFile("sys/bootloader.txt", &test)){
+    Serial.println("Suc");
+  }else{
+    Serial.println("failed");
   }
 
-  if(!connectAP()){
-    Serial.println("Fail to connect.");
-    return;
+  String test_fn = "sys/bootloader.txt";
+
+  if(st.mkdir("sys")){
+    Serial.println("mk suc");
+  }else{
+    Serial.println("mk failed");
   }
 
-  Html reflectionApi(String(" "), reflectionApiCallback);
-  Html addApiPage("/addApi.html", fromESPIFFS);
-  Html serviceAddApi(String(""), addApiCallback);
+  if(st.exist("sys")){
+    Serial.println("exist");
+  }else{
+    Serial.println("no exist");
+  }
 
-  ServerObject.setNotFound(espiffs.readFile("/404.html"));
-  ServerObject.addServer(80);
-  ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
-  ServerObject.setResponse(80, "/reflect", &reflectionApi);
-  ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
-  ServerObject.openAllServers();
+  // for(int i = 0; i < test_fn.length(); i++){
+  //   String fn = Utils.split(test_fn, '/', i);
+
+  //   if(fn != ""){
+  //     Serial.println(fn);
+  //   }else{
+  //     break;
+  //   }
+  // }
+
+//   if(!checkNetwork()){
+//     Serial.println("Not found Network SSID around here.");
+//     return;
+//   }
+
+//   if(!connectAP()){
+//     Serial.println("Fail to connect.");
+//     return;
+//   }
+
+//   Html reflectionApi(String(" "), reflectionApiCallback);
+//   Html addApiPage("/addApi.html", fromESPIFFS);
+//   Html serviceAddApi(String(""), addApiCallback);
+
+//   ServerObject.setNotFound(espiffs.readFile("/404.html"));
+//   ServerObject.addServer(80);
+//   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
+//   ServerObject.setResponse(80, "/reflect", &reflectionApi);
+//   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
+//   ServerObject.openAllServers();
 }
 
 void loop(){
-  ServerObject.requestHandle({80});
+  // ServerObject.requestHandle({80});
 }
