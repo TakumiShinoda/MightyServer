@@ -20,7 +20,16 @@ bool Storage::available(){
 
 String Storage::readFile(String fn){ 
   String result = "";
+  File f = SD.open('/' + fn, FILE_READ);
 
+  if(f.available()){
+    for(unsigned long i = 0; i < f.size(); i++){
+      char c = f.read();
+
+      result = result + c;
+      f.seek(i);
+    }
+  }
   return result;
 }
 

@@ -100,23 +100,17 @@ void setup(){
     Serial.println("failed");
   }
 
-  if(st.writeFile("sys/bootloader.txt", &test)){
+  if(st.writeFile("sys/bootloader.css", &test)){
     Serial.println("Suc");
   }else{
     Serial.println("failed");
   }
 
-  // if(st.mkdir("sys")){
-  //   Serial.println("mk suc");
-  // }else{
-  //   Serial.println("mk failed");
-  // }
-
-  // if(st.exist("sys")){
-  //   Serial.println("exist");
-  // }else{
-  //   Serial.println("no exist");
-  // }
+  if(st.readFile("access_check.txt") != ""){
+    Serial.println(st.readFile("sys/bootloader.css"));
+  }else{
+    Serial.println("read failed");
+  }
 
   // for(int i = 0; i < test_fn.length(); i++){
   //   String fn = Utils.split(test_fn, '/', i);
