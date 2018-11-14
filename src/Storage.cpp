@@ -24,10 +24,12 @@ String Storage::readFile(String fn){
 
   if(f.available()){
     for(unsigned long i = 0; i < f.size(); i++){
-      char c = f.read();
+      char c;
 
-      result = result + c;
       f.seek(i);
+      c = f.read();
+      Serial.println(i);
+      result = result + c;
     }
   }
   return result;
