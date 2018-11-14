@@ -79,6 +79,8 @@ void addApiCallback(ChainArray queries, String *response){
   }
 }
 
+// void 
+
 void setup(){
   String test = "hahaha";
 
@@ -106,11 +108,13 @@ void setup(){
     Serial.println("failed");
   }
 
-  if(st.readFile("access_check.txt") != ""){
+  if(st.readFile("sys/bootloader.css") != ""){
     Serial.println(st.readFile("sys/bootloader.css"));
   }else{
     Serial.println("read failed");
   }
+
+  Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
   // for(int i = 0; i < test_fn.length(); i++){
   //   String fn = Utils.split(test_fn, '/', i);

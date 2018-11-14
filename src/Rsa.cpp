@@ -6,8 +6,8 @@ Rsa::Rsa(unsigned long long _seed1, unsigned long long _seed2){
   unsigned long long n = 0;
   unsigned long long f = 0;
   unsigned long long cnt = 1;
-  unsigned long long rand = Rand() % 1000 + 1;
-
+  unsigned long long rand = random(0, 1000000);
+  
   Seed1 = isPrime(_seed1) ? _seed1 : 0;
   Seed2 = isPrime(_seed2) ? _seed2 : 0;
   if(Seed1 == 0 || Seed2 == 0) std::cout << "failed: " << ((Seed1 == 0) ? "Seed1" : "Seed2") << std::endl;

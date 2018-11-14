@@ -28,7 +28,6 @@ String Storage::readFile(String fn){
 
       f.seek(i);
       c = f.read();
-      Serial.println(i);
       result = result + c;
     }
   }
