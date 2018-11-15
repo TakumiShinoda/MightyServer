@@ -23,7 +23,7 @@ String Storage::readFile(String fn){
   File f = SD.open('/' + fn, FILE_READ);
 
   if(f.available()){
-    for(unsigned long i = 0; i < f.size(); i++){
+    for(unsigned long i = 0; i < f.size() - 2; i++){
       char c;
 
       f.seek(i);
@@ -61,6 +61,7 @@ bool Storage::writeFile(String fn, String *data){
     f.println(*(data));
     return true;
   }else{
+    Serial.println("write failed");
     return false;
   }
 }
@@ -73,4 +74,16 @@ bool Storage::exist(String fn){
 bool Storage::mkdir(String fn){
   if(!Available) return false;
   return SD.mkdir('/' + fn);
+}
+
+bool Storage::checkActive(){
+  if(!Available) return false;
+  String fn = "accessCheck.txt";
+  String text = "hogefugahogefuga";
+  String result = "";
+
+  if(!writeFile(fn, &text)) return false;
+  result = readFile(fn);
+  if(result.length() == text.length()) return true;
+  else return false;
 }

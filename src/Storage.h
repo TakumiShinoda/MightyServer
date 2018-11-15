@@ -16,6 +16,7 @@ class Storage{
     bool writeFile(String fn, String *data);
     bool exist(String fn);  
     bool mkdir(String fn);
+    bool checkActive();
 };
 
 #endif

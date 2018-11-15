@@ -82,8 +82,6 @@ void addApiCallback(ChainArray queries, String *response){
 // void 
 
 void setup(){
-  String test = "hogefugahogefuga";
-
   Serial.begin(115200);
   delay(1000);
   xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
@@ -94,24 +92,12 @@ void setup(){
 
   while(!st.begin()){
     Serial.println("Storage Initializing");
+    delay(500);
   }
 
-  if(st.writeFile("access_check.txt", &test)){
-    Serial.println("Suc");
-  }else{
-    Serial.println("failed");
-  }
-
-  if(st.readFile("sys/bootloader.css") != ""){
-    Serial.println(st.readFile("sys/bootloader.css"));
-  }else{
-    Serial.println("read failed");
-  }
-
-  if(st.writeFile("sys/bootloader.css", &test)){
-    Serial.println("Suc");
-  }else{
-    Serial.println("failed");
+  if(!st.checkActive()){
+    Serial.println("SD is not activate");
+    return;
   }
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
