@@ -86,6 +86,9 @@ void ServerObject::requestHandle_proc(uint8_t port){
           queries = utils->analyzeQuery(request.get("params"));
           keys = queries.keys();
 
+          Serial.print("From: ");
+          Serial.println(client.remoteIP());
+
           Serial.print("Path: ");
           Serial.println(path);
 
