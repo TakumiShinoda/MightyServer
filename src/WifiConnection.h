@@ -3,7 +3,7 @@
 bool connectAP(){
   uint8_t cnt = 0;
 
-  WiFi.mode(WIFI_MODE_STA);
+  WiFi.mode(WIFI_MODE_APSTA);
   WiFi.disconnect(true);
   delay(1000);
   WiFi.begin(SSID, PASS);
@@ -19,6 +19,11 @@ bool connectAP(){
   Serial.println(WiFi.localIP());
 
   return true;
+}
+
+void startAP(){
+  WiFi.mode(WIFI_MODE_APSTA);
+  WiFi.softAP(APSSID, APPASS);
 }
 
 bool checkNetwork(){

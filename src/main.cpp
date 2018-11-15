@@ -22,7 +22,7 @@ Utils Utils;
 ESPIFFS espiffs;
 std::vector<uint8_t> Ports = {80};
 Storage st(SDCS);
-Rsa rsa(101, 3001);
+Rsa rsa(5101, 4271);
 
 void checkHeap(void *arg){
   while(true){
@@ -82,7 +82,7 @@ void addApiCallback(ChainArray queries, String *response){
 // void 
 
 void setup(){
-  String test = "hahaha";
+  String test = "hogefugahogefuga";
 
   Serial.begin(115200);
   delay(1000);
@@ -102,52 +102,44 @@ void setup(){
     Serial.println("failed");
   }
 
-  if(st.writeFile("sys/bootloader.css", &test)){
-    Serial.println("Suc");
-  }else{
-    Serial.println("failed");
-  }
-
   if(st.readFile("sys/bootloader.css") != ""){
     Serial.println(st.readFile("sys/bootloader.css"));
   }else{
     Serial.println("read failed");
   }
 
+  if(st.writeFile("sys/bootloader.css", &test)){
+    Serial.println("Suc");
+  }else{
+    Serial.println("failed");
+  }
+
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
-  // for(int i = 0; i < test_fn.length(); i++){
-  //   String fn = Utils.split(test_fn, '/', i);
+  startAP();
 
-  //   if(fn != ""){
-  //     Serial.println(fn);
-  //   }else{
-  //     break;
-  //   }
-  // }
+  if(!checkNetwork()){
+    Serial.println("Not found Network SSID around here.");
+    return;
+  }
 
-//   if(!checkNetwork()){
-//     Serial.println("Not found Network SSID around here.");
-//     return;
-//   }
+  if(!connectAP()){
+    Serial.println("Fail to connect.");
+    return;
+  }
 
-//   if(!connectAP()){
-//     Serial.println("Fail to connect.");
-//     return;
-//   }
+  Html reflectionApi(String(" "), reflectionApiCallback);
+  Html addApiPage("/addApi.html", fromESPIFFS);
+  Html serviceAddApi(String(""), addApiCallback);
 
-//   Html reflectionApi(String(" "), reflectionApiCallback);
-//   Html addApiPage("/addApi.html", fromESPIFFS);
-//   Html serviceAddApi(String(""), addApiCallback);
-
-//   ServerObject.setNotFound(espiffs.readFile("/404.html"));
-//   ServerObject.addServer(80);
-//   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
-//   ServerObject.setResponse(80, "/reflect", &reflectionApi);
-//   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
-//   ServerObject.openAllServers();
+  ServerObject.setNotFound(espiffs.readFile("/404.html"));
+  ServerObject.addServer(80);
+  ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
+  ServerObject.setResponse(80, "/reflect", &reflectionApi);
+  ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
+  ServerObject.openAllServers();
 }
 
 void loop(){
-  // ServerObject.requestHandle({80});
+  ServerObject.requestHandle({80});
 }
