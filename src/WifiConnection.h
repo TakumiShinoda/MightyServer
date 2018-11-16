@@ -28,10 +28,13 @@ void startAP(){
 
 bool checkNetwork(){
   bool result = false;
+  uint16_t nets = WiFi.scanNetworks();
 
-  for(int i = 0; i < WiFi.scanNetworks(); i++){
+  // Serial.println("Found " + String(nets) + " networks.");
+  for(int i = 0; i < nets; i++){
     String ssid = WiFi.SSID(i);
 
+    // Serial.println("SSID: " + ssid);
     if(ssid == SSID){
       result = true;
       break;

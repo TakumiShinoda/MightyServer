@@ -84,7 +84,6 @@ void addApiCallback(ChainArray queries, String *response){
 void setup(){
   Serial.begin(115200);
   delay(1000);
-  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
@@ -103,16 +102,17 @@ void setup(){
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
   startAP();
+  Serial.println("Start AP");
 
   if(!checkNetwork()){
     Serial.println("Not found Network SSID around here.");
-    return;
+  }else{
+    if(!connectAP()){
+      Serial.println("Fail to connect.");
+    }
   }
 
-  if(!connectAP()){
-    Serial.println("Fail to connect.");
-    return;
-  }
+  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
   Html reflectionApi(String(" "), reflectionApiCallback);
   Html addApiPage("/addApi.html", fromESPIFFS);
