@@ -89,15 +89,15 @@ void setup(){
     Serial.println("SPIFFS Initializing");
   }
 
-  while(!st.begin()){
-    Serial.println("Storage Initializing");
-    delay(500);
-  }
+  // while(!st.begin()){
+  //   Serial.println("Storage Initializing");
+  //   delay(500);
+  // }
 
-  if(!st.checkActive()){
-    Serial.println("SD is not activate");
-    return;
-  }
+  // if(!st.checkActive()){
+  //   Serial.println("SD is not activate");
+  //   return;
+  // }
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 

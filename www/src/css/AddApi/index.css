@@ -46,14 +46,14 @@
     width: 95%;
 }
 
-#apiTableRow{
+.apiTableRow{
     height: 8vh;
 }
 
-#apiTableCellText{
+.apiTableCellText{
     line-height: 8vh;
 }
 
-#apiTableCellBtn{
+.apiTableCellBtn{
     margin-top: 2vh;
 }
