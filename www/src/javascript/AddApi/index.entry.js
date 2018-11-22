@@ -52,12 +52,10 @@ function makeAPITable(objs){ // obj = {'path', 'cleated', 'update', 'owner'}
     }
     trs.push(tr);
   }
-  for(var i = 0; i < trs.length; i++) tbody.append(trs[i])
+  for(var i = 0; i < trs.length; i++) tbody.append(trs[i]);
 }
 
 $(document).ready(() => {
-  console.log('hoge');
-
   makeAPITable(response);
 
   $('#addBtn').on('click', () => {
