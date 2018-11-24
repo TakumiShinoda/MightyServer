@@ -13,6 +13,7 @@ class Utils{
     ChainArray analyzeQuery(String str);
     std::vector<uint8_t> vector_find(std::vector<String> target, String str);
     String ints2utf8(std::vector<uint8_t> data);
+    String fixPath(String path);
 };
 
 #endif

@@ -70,7 +70,7 @@ void addApiCallback(ChainArray queries, String *response){
   String path = pathKeysFound.size() > 0 ? queries.get(keys[pathKeysFound[0]]) : "";
   Html targetApi(html, empty);
 
-  if(path == ""){
+  if(path == "" || html == ""){
     *(response) = "(0)Failed to upload.";
   }else{
     path = path.substring(0, 1) != "/" ? "/" + path : path;
@@ -79,33 +79,61 @@ void addApiCallback(ChainArray queries, String *response){
   }
 }
 
-// void 
+void removeApiCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> pathKeysFound = Utils.vector_find(keys, "path");
+  std::vector<uint8_t> portKeysFound = Utils.vector_find(keys, "port");
+  String path = pathKeysFound.size() > 0 ? queries.get(keys[pathKeysFound[0]]) : "";
+  String portStr = portKeysFound.size() > 0 ? queries.get(keys[portKeysFound[0]]) : "";
+  uint16_t port = portStr.toInt();
+
+  Serial.println("Port: " + portStr);
+  Serial.println(port);
+  Serial.println("hoge");
+  if(path == "" || port == 0){
+    *(response) = "(0)Failed to upload";
+  }else{
+    if(ServerObject.removeResponse(port, "/" + path)) *(response) = "(1)Removed /" + path;
+    else *(response) = "(0)Failed to upload";
+  }
+}
 
 void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  while(!espiffs.begin()){
-    Serial.println("SPIFFS Initializing");
-  }
+  pinMode(18, OUTPUT);
+  pinMode(19, OUTPUT);
+  pinMode(21, OUTPUT);
+  pinMode(22, OUTPUT);
+  pinMode(23, OUTPUT);
+  digitalWrite(18, LOW);
+  digitalWrite(19, LOW);
+  digitalWrite(21, LOW);
+  digitalWrite(22, LOW);
+  digitalWrite(23, LOW);
 
-  while(!st.begin()){
-    Serial.println("Storage Initializing");
-    delay(500);
-  }
+  // while(!espiffs.begin()){
+  //   Serial.println("SPIFFS Initializing");
+  // }
 
-  String str = "hogehogehoge";
+  // while(!st.begin()){
+  //   Serial.println("Storage Initializing");
+  //   delay(500);
+  // }
 
-  if(st.writeFile("hoge.txt", &str)){
-    Serial.println("suc");
-  }else{
-    Serial.println("failed");
-  }
+  // String str = "hogehogehoge";
 
-  if(!st.checkActive()){
-    Serial.println("SD is not activate");
-    return;
-  }
+  // if(st.writeFile("hoge.txt", &str)){
+  //   Serial.println("suc");
+  // }else{
+  //   Serial.println("failed");
+  // }
+
+  // if(!st.checkActive()){
+  //   Serial.println("SD is not activate");
+  //   return;
+  // }
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
@@ -122,15 +150,19 @@ void setup(){
 
   xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
 
+  Html emptyApi("Empty", empty);
   Html reflectionApi(String(" "), reflectionApiCallback);
   Html addApiPage("/addApi.html", fromESPIFFS);
   Html serviceAddApi(String(""), addApiCallback);
+  Html serviceRemoveApi(String(""), removeApiCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
+  ServerObject.setResponse(80, "/empty", &emptyApi);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
+  ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi);
   ServerObject.openAllServers();
 }
 

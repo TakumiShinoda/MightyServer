@@ -146,6 +146,15 @@ void ServerObject::setResponse(uint8_t port, String url, Html *response){
   }
 }
 
+bool ServerObject::removeResponse(uint8_t port, String url){
+  for(int i = 0; i < Servers.size(); i++){
+    if(Servers[i].port == port){
+      return Servers[i].removeResponse(utils->fixPath(url));
+    }
+  }
+  return false;
+}
+
 void ServerObject::setNotFound(String resp){
   notFoundResp = resp;
 }

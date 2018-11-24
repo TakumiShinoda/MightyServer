@@ -21,6 +21,7 @@ class ServerObject{
     void requestHandle(std::vector<uint8_t> ports);
     void setResponse(uint8_t port, String url, Html *response);
     void setNotFound(String resp);
+    bool removeResponse(uint8_t port, String path);
 
   private:
     void addServer_proc(uint8_t port);
@@ -62,6 +63,15 @@ class ServerObject{
           Responses[objIndex].prevCallback = response->htmlObj.prev;
         }
       };
+      bool removeResponse(String path){
+        for(int i = 0; i < Responses.size(); i++){
+          if(Responses[i].url == path){
+            Responses.erase(Responses.begin() + i);
+            return true;
+          }
+        }
+        return false;
+      }
     };
     String notFoundResp = "404";
     std::vector<struct Server> Servers;

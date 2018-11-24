@@ -104,3 +104,20 @@ String Utils::ints2utf8(std::vector<uint8_t> data){
 
   return result;
 }
+
+String Utils::fixPath(String path){
+  if(path[0] != '/'){
+    path = '/' + path;
+  }else{
+    for(int i = 0; i < path.length(); i++){
+      if(path[i] != '/'){
+        if(i > 0){
+          path = path.substring(i - 1);
+        }
+        break;
+      }
+    }
+  }
+
+  return path;
+}
