@@ -1,27 +1,6 @@
 import '../../css/AddApi/header.css'
 import '../../css/AddApi/index.css'
 
-const response = [
-  {
-    'path': 'admin/apimanager',
-    'cleated': '2018/8/2/12:00',
-    'update': '2018/8/13/1:00',
-    'owner': 'First'
-  },
-  {
-    'path': 'admin/apimanager',
-    'cleated': '2018/8/2/12:00',
-    'update': '2018/8/13/1:00',
-    'owner': 'Second'
-  },
-  {
-    'path': 'admin/apimanager',
-    'cleated': '2018/8/2/12:00',
-    'update': '2018/8/13/1:00',
-    'owner': 'Third'
-  },
-];
-
 function makeAPITable(objs){ // obj = {'path', 'cleated', 'update', 'owner'}
   let infoHeads = ['path', 'cleated', 'update', 'owner'];
   let tbody = $('#apiTable tbody');
@@ -55,10 +34,37 @@ function makeAPITable(objs){ // obj = {'path', 'cleated', 'update', 'owner'}
   for(var i = 0; i < trs.length; i++) tbody.append(trs[i]);
 }
 
-$(document).ready(() => {
-  makeAPITable(response);
+function setDomEvents(){
+  return new Promise((res) => {
+    $('#addBtn').on('click', () => {
+      window.location.href = "add.html";
+    });
+  
+    $('.delete').on('click', () => {
+      let confirm = window.confirm("Are you sure?");    
+  
+      if(confirm){
+        fetch('http://'+ location.hostname +':3000/AddApi/remove_api')
+          .then((raw) => raw.text())
+          .then((text) => {
+            if(text == "success"){
+              location.reload();
+            }else{
+              alert('Failed');
+              console.log(text);
+            }
+          });
+      }
+    });
 
-  $('#addBtn').on('click', () => {
-    window.location.href = "add.html";
+    res();
   });
+}
+
+$(document).ready(() => {
+  fetch('http://'+ location.hostname +':3000/AddApi/test_response')
+    .then((raw) => raw.json())
+    .then((response) => makeAPITable(response))
+    .then(() => setDomEvents())
+    .catch((err) => console.log(err));
 });
