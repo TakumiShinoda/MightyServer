@@ -123,13 +123,22 @@ void ServerObject::requestHandle_proc(uint8_t port){
 
 void ServerObject::sendGetResponse(WiFiClient *client, String html, String status){
   String contentLength = String(html.length());
-  String statusResp = "HTTP/1.1 " + status + " OK";
-  String contentLengthResp = "Content-Length: " + contentLength;
-  String connectionResp = "Connection: close";
-  String contentTypeResp = "Content-Type: text/html";
   String newLine = "\r\n";
+  String response = "";
 
-  client->print(statusResp + newLine + contentLengthResp + newLine + connectionResp + newLine +contentTypeResp + newLine + newLine + html);
+  response += "HTTP/1.1 " + status + " OK" + newLine;
+  response += "Content-Length: " + contentLength + newLine;
+  response += "Connection: close" + newLine;
+  response += "Content-Type: text/html" + newLine + newLine;
+
+  for(int i = 0; i < response.length(); i++){
+    client->print(response[i]);
+  }
+
+  for(int i = 0; i < html.length(); i++){
+    client->print(html[i]);
+  }
+
   client->stop();
 }
 

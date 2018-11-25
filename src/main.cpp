@@ -113,27 +113,19 @@ void setup(){
   digitalWrite(22, LOW);
   digitalWrite(23, LOW);
 
-  // while(!espiffs.begin()){
-  //   Serial.println("SPIFFS Initializing");
-  // }
+  while(!espiffs.begin()){
+    Serial.println("SPIFFS Initializing");
+  }
 
-  // while(!st.begin()){
-  //   Serial.println("Storage Initializing");
-  //   delay(500);
-  // }
+  while(!st.begin()){
+    Serial.println("Storage Initializing");
+    delay(500);
+  }
 
-  // String str = "hogehogehoge";
-
-  // if(st.writeFile("hoge.txt", &str)){
-  //   Serial.println("suc");
-  // }else{
-  //   Serial.println("failed");
-  // }
-
-  // if(!st.checkActive()){
-  //   Serial.println("SD is not activate");
-  //   return;
-  // }
+  if(!st.checkActive()){
+    Serial.println("SD is not activate");
+    return;
+  }
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
