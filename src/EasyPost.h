@@ -18,6 +18,7 @@ class EasyPost{
     EasyPost(Storage *_st);
     String addUser(String user, String pass);
     int8_t statusCode();
+    String updatePassword(String user, String _oldPass, String _newPass);
     // bool addTable(String user, String pass, String tableName);
     // bool post(String user, String pass, String data);
     // String get(String user, String pass);

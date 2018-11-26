@@ -122,6 +122,10 @@ void setup(){
 
   if(ep.statusCode() != 0){
     Serial.println(ep.addUser("takumi", "123456"));
+    Serial.println(ep.updatePassword("takumi", "123456", "234567"));
+    Serial.println(ep.updatePassword("tatata", "123456", "hogehoge"));
+  }else{
+    Serial.println(ep.statusCode());
   }
 
   return;
