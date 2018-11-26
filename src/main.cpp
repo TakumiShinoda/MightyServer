@@ -100,35 +100,47 @@ void removeApiCallback(ChainArray queries, String *response){
   }
 }
 
+void easypostAddUserCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+
+  if(user != "" && password != ""){
+    if(!ep.statusCode() == 0){
+      *(response) = ep.addUser(user, password);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
+void easypostUpdatePassCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> old_passwordKeysFound = Utils.vector_find(keys, "old_password");
+  std::vector<uint8_t> new_passwordKeysFound = Utils.vector_find(keys, "new_password");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String old_password = old_passwordKeysFound.size() > 0 ? queries.get(keys[old_passwordKeysFound[0]]) : "";
+  String new_password = new_passwordKeysFound.size() > 0 ? queries.get(keys[new_passwordKeysFound[0]]) : "";
+
+  if(user != "" && old_password != "" && new_password != ""){
+    if(!ep.statusCode() == 0){
+      *(response) = ep.updatePassword(user, old_password, new_password);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
-
-  pinMode(18, OUTPUT);
-  pinMode(19, OUTPUT);
-  pinMode(21, OUTPUT);
-  pinMode(22, OUTPUT);
-  pinMode(23, OUTPUT);
-  digitalWrite(18, LOW);
-  digitalWrite(19, LOW);
-  digitalWrite(21, LOW);
-  digitalWrite(22, LOW);
-  digitalWrite(23, LOW);
-
-  if(!st.checkActive()){
-    Serial.println("SD is not activate");
-    return;
-  }
-
-  if(ep.statusCode() != 0){
-    Serial.println(ep.addUser("takumi", "123456"));
-    Serial.println(ep.updatePassword("takumi", "123456", "234567"));
-    Serial.println(ep.updatePassword("tatata", "123456", "hogehoge"));
-  }else{
-    Serial.println(ep.statusCode());
-  }
-
-  return;
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
@@ -164,6 +176,8 @@ void setup(){
   Html addApiPage("/addApi.html", fromESPIFFS);
   Html serviceAddApi(String(""), addApiCallback);
   Html serviceRemoveApi(String(""), removeApiCallback);
+  Html servicesEasyPostAddUser(String(""), easypostAddUserCallback);
+  Html servicesEasyPostUpdatePass(String(""), easypostUpdatePassCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -171,7 +185,9 @@ void setup(){
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
-  ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi);
+  ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi); 
+  ServerObject.setResponse(80, "/services/easypost/adduser", &servicesEasyPostAddUser);
+  ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
   ServerObject.openAllServers();
 }
 
