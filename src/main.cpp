@@ -12,6 +12,7 @@
 #include "ESPIFFS.h"
 #include "Storage.h"
 #include "Rsa.h"
+#include "EasyPost.h"
 
 #include "WifiConnection.h"
 
@@ -23,6 +24,7 @@ ESPIFFS espiffs;
 std::vector<uint8_t> Ports = {80};
 Storage st(SDCS);
 Rsa rsa(5101, 4271);
+EasyPost ep(&st);
 
 void checkHeap(void *arg){
   while(true){
@@ -112,6 +114,17 @@ void setup(){
   digitalWrite(21, LOW);
   digitalWrite(22, LOW);
   digitalWrite(23, LOW);
+
+  if(!st.checkActive()){
+    Serial.println("SD is not activate");
+    return;
+  }
+
+  if(ep.statusCode() != 0){
+    Serial.println(ep.addUser("takumi", "123456"));
+  }
+
+  return;
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");

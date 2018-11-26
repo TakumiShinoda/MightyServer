@@ -55,7 +55,6 @@ bool Storage::writeFile(String fn, String *data){
     mkdir(dirname);
   }
 
-  Serial.println(fn);
   f = SD.open('/' + fn, "w");
 
   if(f.available()){
