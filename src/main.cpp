@@ -138,6 +138,41 @@ void easypostUpdatePassCallback(ChainArray queries, String *response){
   }
 }
 
+void easypostAddTableCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  std::vector<uint8_t> tableNameKeysFound = Utils.vector_find(keys, "tablename");
+  std::vector<uint8_t> colsKeysFound = Utils.vector_find(keys, "cols");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+  String tableName = tableNameKeysFound.size() > 0 ? queries.get(keys[tableNameKeysFound[0]]) : "";
+  String cols = colsKeysFound.size() > 0 ? queries.get(keys[colsKeysFound[0]]) : "";
+  std::vector<String> colsVector;
+  uint8_t cnt = 0;
+
+  if(user != "" && password != "" && cols != ""){
+    while(true){
+      String block = Utils.split(cols, ',', cnt);
+
+      if(block != ""){
+        colsVector.push_back(block);
+      }else{
+        break;
+      }
+      cnt += 1;
+    }
+
+    if(ep.statusCode() != 0){
+      *(response) = ep.addTable(user, password, tableName, colsVector);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
@@ -178,6 +213,7 @@ void setup(){
   Html serviceRemoveApi(String(""), removeApiCallback);
   Html servicesEasyPostAddUser(String(""), easypostAddUserCallback);
   Html servicesEasyPostUpdatePass(String(""), easypostUpdatePassCallback);
+  Html servicesEasyPostAddTable(String(""), easypostAddTableCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -188,6 +224,7 @@ void setup(){
   ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi); 
   ServerObject.setResponse(80, "/services/easypost/adduser", &servicesEasyPostAddUser);
   ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
+  ServerObject.setResponse(80, "/services/easypost/addtable", &servicesEasyPostAddTable);
   ServerObject.openAllServers();
 }
 

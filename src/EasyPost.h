@@ -19,7 +19,7 @@ class EasyPost{
     String addUser(String user, String pass);
     String updatePassword(String user, String _oldPass, String _newPass);
     int8_t statusCode();
-    // bool addTable(String user, String pass, String tableName);
+    String addTable(String user, String pass, String tableName, std::vector<String> cols);
     // bool post(String user, String pass, String data);
     // String get(String user, String pass);
 };

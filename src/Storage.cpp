@@ -23,7 +23,7 @@ String Storage::readFile(String fn){
   File f = SD.open('/' + fn, FILE_READ);
 
   if(f.available()){
-    for(unsigned long i = 0; i < f.size() - 2; i++){
+    for(unsigned long i = 0; i < f.size(); i++){
       char c;
 
       f.seek(i);
@@ -58,7 +58,7 @@ bool Storage::writeFile(String fn, String *data){
   f = SD.open('/' + fn, "w");
 
   if(f.available()){
-    f.println(*(data));
+    f.print(*(data));
     return true;
   }else{
     Serial.println("write failed");

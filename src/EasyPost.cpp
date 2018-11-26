@@ -52,9 +52,40 @@ String EasyPost::updatePassword(String user, String _oldPass, String _newPass){
   }
 }
 
-// bool EasyPost::addTable(String user, String pass, String tableName){
+String EasyPost::addTable(String user, String pass, String tableName, std::vector<String> cols){
+  String userPath = "easyPost/" + user;
 
-// }
+  if(st->exist(userPath)){
+    String password = st->readFile(userPath + "/password.ep");
+    String tablePath = userPath + "/" + tableName + ".ep";
+    String sep = String(char(0x03));
+    String tableHeader = "";
+
+    for(int i = 0; i < cols.size(); i++){
+      Serial.println(cols[i]);
+      tableHeader += cols[i] + sep;
+    }
+    tableHeader += '\n';
+
+    Serial.println(tableHeader);
+
+    if(password == pass){
+      if(!st->exist(tablePath)){
+        if(st->writeFile(tablePath, &tableHeader)){
+          return "1: Success";
+        }else{
+          return "-2: Storage error";
+        }
+      }else{
+        return "-1: Already exist";
+      }
+    }else{
+      return "-4: Failed to log in";
+    }
+  }else{
+    return "-3: User is not Exist"; 
+  }
+}
 
 // bool EasyPost::post(String user, String pass, String data){
 
