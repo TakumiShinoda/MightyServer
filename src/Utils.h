@@ -6,6 +6,19 @@
 #include <vector>
 #include "ChainArray.h"
 
+class StatusGen{
+  private:
+    ChainArray States;
+    String RuleName;
+
+  public:
+    StatusGen(String name);
+    void addStatus(int8_t code, String mes);
+    void removeStatus(int8_t code);
+    String getMes(int8_t code);
+    String getArranged(int8_t code, String sep);
+};
+
 class Utils{
   public:
     ChainArray analyzeGetRequest(String request);
