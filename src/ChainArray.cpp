@@ -10,6 +10,16 @@ void ChainArray::add(String key, String value){
   addElement(key, value);
 }
 
+void ChainArray::remove(String key){
+  std::vector<uint8_t> keyFound = vector_find(keys(), key);
+
+  if(keyFound.size() > 0){
+    Serial.println(keyFound[0]);
+    chainArrays.erase(chainArrays.begin() + keyFound[0]);
+    chainArrays.shrink_to_fit();
+  }
+}
+
 void ChainArray::addElement(String key, String value){
   struct chainArray element;
   std::vector<uint8_t> keyFound = vector_find(keys(), key);
