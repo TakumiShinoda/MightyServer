@@ -177,30 +177,20 @@ void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  // ChainArray testArr;
+  StatusGen stTest;
 
-  // testArr.add("test", "test");
-  // testArr.add("hoge", "hoge");
-  // std::vector<String> testKeys = testArr.keys();
+  stTest.addStatus(0, "Test");
+  stTest.addStatus(-5, "hoge");
 
-  // for(int i = 0; i < testKeys.size(); i++){
-  //   Serial.print("Key: ");
-  //   Serial.println(testKeys[i]);
-  //   Serial.print("Val: ");
-  //   Serial.println(testArr.get(testKeys[i]));
-  // }
+  Serial.println(stTest.getMes(0));
+  Serial.println(stTest.getMes(1));
+  Serial.println(stTest.getArranged(-5, ": "));
 
-  // testArr.remove("hoge");
-  // testKeys = testArr.keys();
+  stTest.removeStatus(-5);
 
-  // for(int i = 0; i < testKeys.size(); i++){
-  //   Serial.print("Key: ");
-  //   Serial.println(testKeys[i]);
-  //   Serial.print("Val: ");
-  //   Serial.println(testArr.get(testKeys[i]));
-  // }
+  Serial.println("last: " + stTest.getMes(-5));
 
-  // return;
+  return;
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
