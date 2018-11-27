@@ -19,6 +19,7 @@ class ChainArray{
       String value = "";
     };
     std::vector<struct chainArray> chainArrays;
+    std::vector<uint8_t> vector_find(std::vector<String> target, String str);
 };
 
 #endif

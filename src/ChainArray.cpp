@@ -12,10 +12,15 @@ void ChainArray::add(String key, String value){
 
 void ChainArray::addElement(String key, String value){
   struct chainArray element;
+  std::vector<uint8_t> keyFound = vector_find(keys(), key);
 
-  element.key = key;
-  element.value = value;
-  chainArrays.push_back(element);
+  if(keyFound.size() > 0){
+    chainArrays[keyFound[0]].value = value;
+  }else{
+    element.key = key;
+    element.value = value;
+    chainArrays.push_back(element);
+  }
 }
 
 std::vector<String> ChainArray::keys(){
@@ -38,4 +43,14 @@ String ChainArray::get(String key){
   }
 
   return "";
+}
+
+std::vector<uint8_t> ChainArray::vector_find(std::vector<String> target, String str){
+  std::vector<uint8_t> result;
+
+  for(int i = 0; i < target.size(); i++){
+    if(target[i] == str) result.push_back(i);
+  }
+
+  return result;
 }
