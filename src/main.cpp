@@ -103,16 +103,22 @@ void removeApiCallback(ChainArray queries, String *response){
   }
 }
 
+void QRGeneratorApiCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> dataKeysFound = Utils.vector_find(keys, "data");
+  String data = dataKeysFound.size() > 0 ? queries.get(keys[dataKeysFound[0]]) : "";
+  QrCode qr0 = QrCode::encodeText(data.c_str(), QrCode::Ecc::MEDIUM);
+
+  if(data != ""){
+    *(response) = qr0.toSvgString(4).c_str();
+  }else{
+    *(response) = "Failed";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
-
-  QrCode qr0 = QrCode::encodeText("jksdfjasklfjl;asdjflkjsafkljsdalkf;jklsdajfkldjlfka;jdslkaf;j;askljfa;ljfasdl;jfklasdjf;lasjfd;lkasjf;las", QrCode::Ecc::MEDIUM);
-  std::string svg = qr0.toSvgString(4);
-
-  std::cout << svg << std::endl;
-
-  return;
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
@@ -148,6 +154,7 @@ void setup(){
   Html addApiPage("/addApi.html", fromESPIFFS);
   Html serviceAddApi(String(""), addApiCallback);
   Html serviceRemoveApi(String(""), removeApiCallback);
+  Html servicesQRGenarator(String(""), QRGeneratorApiCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -156,6 +163,7 @@ void setup(){
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
   ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi);
+  ServerObject.setResponse(80, "/services/qrgen", &servicesQRGenarator);
   ServerObject.openAllServers();
 }
 
