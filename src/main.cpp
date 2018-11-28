@@ -13,6 +13,11 @@
 #include "Storage.h"
 #include "Rsa.h"
 
+#include <string>
+#include <iostream>
+#include "QrCode.hpp"
+using namespace qrcodegen;
+
 #include "WifiConnection.h"
 
 #define SDCS 5
@@ -102,16 +107,12 @@ void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  pinMode(18, OUTPUT);
-  pinMode(19, OUTPUT);
-  pinMode(21, OUTPUT);
-  pinMode(22, OUTPUT);
-  pinMode(23, OUTPUT);
-  digitalWrite(18, LOW);
-  digitalWrite(19, LOW);
-  digitalWrite(21, LOW);
-  digitalWrite(22, LOW);
-  digitalWrite(23, LOW);
+  QrCode qr0 = QrCode::encodeText("jksdfjasklfjl;asdjflkjsafkljsdalkf;jklsdajfkldjlfka;jdslkaf;j;askljfa;ljfasdl;jfklasdjf;lasjfd;lkasjf;las", QrCode::Ecc::MEDIUM);
+  std::string svg = qr0.toSvgString(4);
+
+  std::cout << svg << std::endl;
+
+  return;
 
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
