@@ -201,12 +201,12 @@ void setup(){
   //     Serial.println("seek failed");
   //   }
   // }else{
-  //   Serial.println("write failed");
+   //   Serial.println("write failed");
   // }
 
-  int16_t size = st.fileSize("hogehoge.txt");
+  int64_t size = st.fileSize("hogehoge.txt");
 
-  std::cout << size << std::endl;
+  std::cout << size << std::endl; 
 
   return;
 

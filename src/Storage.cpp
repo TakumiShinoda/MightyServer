@@ -125,12 +125,11 @@ int64_t Storage::fileSize(String fn){
   if(!Available) return -1;
   File f;
 
-  f = SD.open('/' + fn, "w");
+  f = SD.open('/' + fn, "r");
+
   if(f.available()){
-    f.close();
     return f.size();
   }else{
-    f.close();
     return -1;
   }
 }
