@@ -177,21 +177,6 @@ void setup(){
   Serial.begin(115200);
   delay(1000);
 
-  StatusGen stTest;
-
-  stTest.addStatus(0, "Test");
-  stTest.addStatus(-5, "hoge");
-
-  Serial.println(stTest.getMes(0));
-  Serial.println(stTest.getMes(1));
-  Serial.println(stTest.getArranged(-5, ": "));
-
-  stTest.removeStatus(-5);
-
-  Serial.println("last: " + stTest.getMes(-5));
-
-  return;
-
   while(!espiffs.begin()){
     Serial.println("SPIFFS Initializing");
   }
@@ -219,7 +204,7 @@ void setup(){
     }
   }
 
-  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 4096, NULL, 1, NULL, 1);
 
   Html emptyApi("Empty", empty);
   Html reflectionApi(String(" "), reflectionApiCallback);

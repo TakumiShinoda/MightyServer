@@ -12,9 +12,11 @@ class EasyPost{
     Storage *st;
     String EmptyStr = "";
     Utils *utils = new Utils();
+    StatusGen RespCode;
+    StatusGen InternalStatus;
 
   public:
-    String Status = "0: None";
+    String Status;
     EasyPost(Storage *_st);
     String addUser(String user, String pass);
     String updatePassword(String user, String _oldPass, String _newPass);

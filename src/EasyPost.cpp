@@ -2,15 +2,24 @@
 
 EasyPost::EasyPost(Storage *_st){
   st = _st;
+  RespCode.addStatus(1, "Success");
+  RespCode.addStatus(-1, "Already exist");
+  RespCode.addStatus(-2, "Storage error");
+  RespCode.addStatus(-3, "User is not Exist");
+  RespCode.addStatus(-4, "Failed to log in");
+  InternalStatus.addStatus(0, "Initialize error");
+  InternalStatus.addStatus(1, "Available");
+  InternalStatus.addStatus(-2, "Storage error");
+  Status = InternalStatus.getArranged(0, ": ");
 
   if(!st->exist("easyPost")){
     if(st->mkdir("easyPost")){
-      Status = "1: Available";
+      Status = InternalStatus.getArranged(1, ": ");
     }else{
-      Status = "-2: Storage error";
+      Status = InternalStatus.getArranged(1, ": ");
     }
   }else{
-    Status = "1: Available";
+    Status = InternalStatus.getArranged(1, ": ");
   }
 }
 
@@ -23,12 +32,12 @@ int8_t EasyPost::statusCode(){
 String EasyPost::addUser(String user, String pass){
   if(!st->exist("easyPost/" + user)){ 
     if(st->writeFile("easyPost/" + user + "/password.ep", &pass)){
-      return "1: Success";
+      return RespCode.getArranged(1, ": ");
     }else{
-      return "-2: Storage error";
+      return RespCode.getArranged(-2, ": ");
     }
   }else{
-    return "-1: Already exist";
+    return RespCode.getArranged(-1, ": ");
   }
 }
 
@@ -40,15 +49,15 @@ String EasyPost::updatePassword(String user, String _oldPass, String _newPass){
 
     if(oldPass == _oldPass){
       if(st->writeFile(userPath + "/password.ep", &_newPass)){
-        return "1: Success";
+        return RespCode.getArranged(1, ": ");
       }else{
-        return "-2: Storage error";
+        return RespCode.getArranged(-2, ": ");
       }
     }else{
-      return "-4: Failed to log in";
+      return RespCode.getArranged(-4, ": ");
     }
   }else{
-    return "-3: User is not Exist";
+    return RespCode.getArranged(-3, ": ");
   }
 }
 
@@ -72,18 +81,18 @@ String EasyPost::addTable(String user, String pass, String tableName, std::vecto
     if(password == pass){
       if(!st->exist(tablePath)){
         if(st->writeFile(tablePath, &tableHeader)){
-          return "1: Success";
+          return RespCode.getArranged(1, ": ");
         }else{
-          return "-2: Storage error";
+          return RespCode.getArranged(-2, ": ");
         }
       }else{
-        return "-1: Already exist";
+        return RespCode.getArranged(-1, ": ");
       }
     }else{
-      return "-4: Failed to log in";
+      return RespCode.getArranged(-4, ": ");
     }
   }else{
-    return "-3: User is not Exist"; 
+    return RespCode.getArranged(-3, ": "); 
   }
 }
 
