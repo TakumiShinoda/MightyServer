@@ -192,21 +192,24 @@ void setup(){
     return;
   }
 
-  // String hogeTest = "hogehoge";
-  // String hogeTest2 = "aaaaa";
-  // if(st.writeFile("hogehoge.txt", &hogeTest)){
-  //   if(st.seekCheck("hogehoge.txt", &hogeTest2, 4)){
-  //     Serial.println("suc");
-  //   }else{
-  //     Serial.println("seek failed");
-  //   }
-  // }else{
-   //   Serial.println("write failed");
-  // }
+  String testStr = "hogehoge";
+  String testStr2 = "AAA";
+  String testStr3 = "BBB";
 
-  int64_t size = st.fileSize("hogehoge.txt");
-
-  std::cout << size << std::endl; 
+  if(st.writeFile("hogehoge.txt", &testStr)){
+    if(st.appendToFile("hogehoge.txt", &testStr2, 4)){
+      if(st.appendToFile("hogehoge.txt", &testStr3, st.fileSize("hogehoge.txt"))){
+        Serial.println("suc");
+        std::cout << st.fileSize("hogehoge.txt") << std::endl;
+      }else{
+        Serial.println("last error");
+      }
+    }else{  
+      Serial.println("append error");
+    }
+  }else{
+    Serial.println("write error");
+  }
 
   return;
 

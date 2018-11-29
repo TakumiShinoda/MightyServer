@@ -92,7 +92,9 @@ bool Storage::appendToFile(String fn, String *data, uint32_t pos){
   if(!Available) return false;
   String filename = "";
   String dirname = "";
+  int64_t size = fileSize(fn);
   File f;
+  File fr;
 
   for(int i = 0; i < fn.length(); i++){
     char c = fn[fn.length() - 1 - i];
@@ -109,11 +111,25 @@ bool Storage::appendToFile(String fn, String *data, uint32_t pos){
     mkdir(dirname);
   }
 
+  fr = SD.open('/' + fn, "r");
+  String last = "";
+  if(pos > 0 && pos < size){
+    fr.seek(pos);
+  }else if(pos > 0){
+    fr.seek(size - 1);
+    last = String(char(fr.read()));
+  }
+  fr.close();
+
   f = SD.open('/' + fn, "w");
-  if(pos > 0) f.seek(pos);
+  if(pos > 0 && pos < size){
+    f.seek(pos);
+  }else if(pos > 0){
+    f.seek(size - 1);
+  }
 
   if(f.available()){
-    f.print(*(data));
+    f.print(last + *(data));
     return true;
   }else{
     Serial.println("write failed");
