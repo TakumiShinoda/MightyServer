@@ -87,3 +87,50 @@ bool Storage::checkActive(){
   if(result.length() == text.length()) return true;
   else return false;
 }
+
+bool Storage::appendToFile(String fn, String *data, uint32_t pos){
+  if(!Available) return false;
+  String filename = "";
+  String dirname = "";
+  File f;
+
+  for(int i = 0; i < fn.length(); i++){
+    char c = fn[fn.length() - 1 - i];
+
+    if(c == '/'){
+      dirname = fn.substring(0, fn.length() - i - 1);
+      break;
+    }else{
+      filename = c + filename;
+    }
+  }
+
+  if(!exist(dirname)){
+    mkdir(dirname);
+  }
+
+  f = SD.open('/' + fn, "w");
+  if(pos > 0) f.seek(pos);
+
+  if(f.available()){
+    f.print(*(data));
+    return true;
+  }else{
+    Serial.println("write failed");
+    return false;
+  }
+}
+
+int64_t Storage::fileSize(String fn){
+  if(!Available) return -1;
+  File f;
+
+  f = SD.open('/' + fn, "w");
+  if(f.available()){
+    f.close();
+    return f.size();
+  }else{
+    f.close();
+    return -1;
+  }
+}

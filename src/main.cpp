@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SD.h>
 #include <vector>
+#include <iostream>
 #include "WiFi.h"
 #include <HTTPClient.h>
 #include "freertos/FreeRTOS.h"
@@ -190,6 +191,24 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
+
+  // String hogeTest = "hogehoge";
+  // String hogeTest2 = "aaaaa";
+  // if(st.writeFile("hogehoge.txt", &hogeTest)){
+  //   if(st.seekCheck("hogehoge.txt", &hogeTest2, 4)){
+  //     Serial.println("suc");
+  //   }else{
+  //     Serial.println("seek failed");
+  //   }
+  // }else{
+  //   Serial.println("write failed");
+  // }
+
+  int16_t size = st.fileSize("hogehoge.txt");
+
+  std::cout << size << std::endl;
+
+  return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
