@@ -174,6 +174,47 @@ void easypostAddTableCallback(ChainArray queries, String *response){
   }
 }
 
+void easypostPostCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  std::vector<uint8_t> tablenameKeysFound = Utils.vector_find(keys, "tablename");
+  std::vector<uint8_t> dataKeysFound = Utils.vector_find(keys, "data");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+  String tablename = tablenameKeysFound.size() > 0 ? queries.get(keys[tablenameKeysFound[0]]) : "";
+  String data = dataKeysFound.size() > 0 ? queries.get(keys[dataKeysFound[0]]) : "";
+  ChainArray dataObject;
+  uint16_t cnt = 0;
+
+  if(user != "" && password != "" && tablename != "" && data != ""){
+    while(true){
+      String block = Utils.split(data, ';', cnt);
+
+      if(block != ""){
+        dataObject.add(Utils.split(block, ':', 0), Utils.split(block, ':', 1));
+      }else{
+        break;
+      }
+      cnt += 1;
+    }
+
+    std::vector<String> keys = dataObject.keys();
+
+    for(int i = 0; i < keys.size(); i++){
+      if(dataObject.get(keys[i]) == ""){
+        dataObject.add(keys[i], "None");
+      }
+
+      Serial.println(dataObject.get(keys[i]));
+    }
+
+    *(response) = "1: Success";
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
@@ -191,27 +232,6 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
-
-  String testStr = "hogehoge";
-  String testStr2 = "AAA";
-  String testStr3 = "BBB";
-
-  if(st.writeFile("hogehoge.txt", &testStr)){
-    if(st.appendToFile("hogehoge.txt", &testStr2, 4)){
-      if(st.appendToFile("hogehoge.txt", &testStr3, st.fileSize("hogehoge.txt"))){
-        Serial.println("suc");
-        std::cout << st.fileSize("hogehoge.txt") << std::endl;
-      }else{
-        Serial.println("last error");
-      }
-    }else{  
-      Serial.println("append error");
-    }
-  }else{
-    Serial.println("write error");
-  }
-
-  return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
@@ -236,6 +256,7 @@ void setup(){
   Html servicesEasyPostAddUser(String(""), easypostAddUserCallback);
   Html servicesEasyPostUpdatePass(String(""), easypostUpdatePassCallback);
   Html servicesEasyPostAddTable(String(""), easypostAddTableCallback);
+  Html servicesEasyPostPost(String(""), easypostPostCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -247,6 +268,7 @@ void setup(){
   ServerObject.setResponse(80, "/services/easypost/adduser", &servicesEasyPostAddUser);
   ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
   ServerObject.setResponse(80, "/services/easypost/addtable", &servicesEasyPostAddTable);
+  ServerObject.setResponse(80, "/services/easypost/post", &servicesEasyPostPost);
   ServerObject.openAllServers();
 }
 

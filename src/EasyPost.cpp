@@ -7,6 +7,7 @@ EasyPost::EasyPost(Storage *_st){
   RespCode.addStatus(-2, "Storage error");
   RespCode.addStatus(-3, "User is not Exist");
   RespCode.addStatus(-4, "Failed to log in");
+  RespCode.addStatus(-5, "Table is not Exist");
   InternalStatus.addStatus(0, "Initialize error");
   InternalStatus.addStatus(1, "Available");
   InternalStatus.addStatus(-2, "Storage error");
@@ -96,9 +97,27 @@ String EasyPost::addTable(String user, String pass, String tableName, std::vecto
   }
 }
 
-// bool EasyPost::post(String user, String pass, String data){
+String EasyPost::post(String user, String pass, String _tablePath, ChainArray data){
+  String userPath = "easyPost/" + user;
 
-// }
+  if(st->exist(userPath)){
+    String password = st->readFile(userPath + "/password.ep");
+    String tablePath = userPath + "/" + _tablePath;
+
+    if(password == pass){
+      if(st->exist(tablePath)){
+        // String index = 
+        return RespCode.getArranged(1, ": ");
+      }else{
+        return RespCode.getArranged(-5, ": ");
+      }
+    }else{
+      return RespCode.getArranged(-4, ": ");
+    }
+  }else{
+    return RespCode.getArranged(-3, ": ");
+  }
+}
 
 // String EasyPost::get(String user, String pass){
 

@@ -15,7 +15,7 @@ class Storage{
     String readFile(String fn);
     bool writeFile(String fn, String *data);
     bool appendToFile(String fn, String *data, uint32_t pos = 0);
-    bool exist(String fn);  
+    bool exist(String fn);
     bool mkdir(String fn);
     bool checkActive();
     int64_t fileSize(String fn);

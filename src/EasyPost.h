@@ -22,7 +22,7 @@ class EasyPost{
     String updatePassword(String user, String _oldPass, String _newPass);
     int8_t statusCode();
     String addTable(String user, String pass, String tableName, std::vector<String> cols);
-    // bool post(String user, String pass, String data);
+    String post(String user, String pass, String _tablePath, ChainArray data);
     // String get(String user, String pass);
 };
 
