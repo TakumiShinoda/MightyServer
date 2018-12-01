@@ -34,6 +34,34 @@ String Storage::readFile(String fn){
   return result;
 }
 
+String Storage::readLine(String fn, uint16_t lineNum){
+  String result = "";
+  File f = SD.open('/' + fn, FILE_READ);
+  uint16_t cnt = 0;
+
+  if(f.available()){
+    String line = "";
+
+    for(unsigned long i = 0; i < f.size(); i++){
+      char c;
+
+      f.seek(i);
+      c = f.read();
+      if(c != '\n'){
+        line += c;
+      }else{
+        result = line;
+        line = "";
+        if(cnt >= lineNum){
+          break;
+        }
+        cnt += 1;
+      }
+    }
+  }
+  return result;
+}
+
 bool Storage::writeFile(String fn, String *data){
   if(!Available) return false;
   String filename = "";

@@ -8,6 +8,7 @@ EasyPost::EasyPost(Storage *_st){
   RespCode.addStatus(-3, "User is not Exist");
   RespCode.addStatus(-4, "Failed to log in");
   RespCode.addStatus(-5, "Table is not Exist");
+  RespCode.addStatus(-6, "Params error");
   InternalStatus.addStatus(0, "Initialize error");
   InternalStatus.addStatus(1, "Available");
   InternalStatus.addStatus(-2, "Storage error");
@@ -102,12 +103,42 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
 
   if(st->exist(userPath)){
     String password = st->readFile(userPath + "/password.ep");
-    String tablePath = userPath + "/" + _tablePath;
+    String tablePath = userPath + "/" + _tablePath + ".ep";
+    Serial.println(tablePath);
 
     if(password == pass){
       if(st->exist(tablePath)){
-        // String index = 
-        return RespCode.getArranged(1, ": ");
+        String result = "";
+        String indexStr = st->readLine(tablePath);
+        std::vector<String> indexs;
+        std::vector<String> inputKeys = data.keys();
+        uint8_t cnt = 0;
+
+        Serial.println(indexStr);
+
+        while(true){
+          String block = utils->split(indexStr, char(0x03), cnt);
+
+          if(block == ""){
+            break;
+          }else{
+            indexs.push_back(block);
+          }
+          cnt += 1;
+        }
+
+        for(int i = 0; i < indexs.size(); i++){
+          result += data.get(indexs[i]) + String(char(0x03));
+        }
+        result += '\n';
+
+        Serial.println(result);
+
+        if(st->appendToFile(tablePath, &result, st->fileSize(tablePath))){
+          return RespCode.getArranged(1, ": ");
+        }else{
+          return RespCode.getArranged(-6, ": ");
+        }
       }else{
         return RespCode.getArranged(-5, ": ");
       }

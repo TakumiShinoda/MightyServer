@@ -206,10 +206,11 @@ void easypostPostCallback(ChainArray queries, String *response){
         dataObject.add(keys[i], "None");
       }
 
+      Serial.print(keys[i] + ": ");
       Serial.println(dataObject.get(keys[i]));
     }
 
-    *(response) = "1: Success";
+    *(response) = ep.post(user, password, tablename, dataObject);
   }else{
     *(response) = "0: Params shortage";
   }
@@ -232,6 +233,10 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
+
+  // Serial.println(st.readLine("easyPost/shinoda/test.ep", 0));
+
+  // return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
