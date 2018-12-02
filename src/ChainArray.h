@@ -9,6 +9,7 @@ class ChainArray{
     String get(String key);
     void add(std::vector<String> keys, std::vector<String> values);
     void add(String key, String value);
+    void remove(String key);
     std::vector<String> keys();
     void clear();
 
@@ -19,6 +20,7 @@ class ChainArray{
       String value = "";
     };
     std::vector<struct chainArray> chainArrays;
+    std::vector<uint8_t> vector_find(std::vector<String> target, String str);
 };
 
 #endif

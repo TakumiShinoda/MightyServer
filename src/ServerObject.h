@@ -67,6 +67,7 @@ class ServerObject{
         for(int i = 0; i < Responses.size(); i++){
           if(Responses[i].url == path){
             Responses.erase(Responses.begin() + i);
+            Responses.shrink_to_fit();
             return true;
           }
         }

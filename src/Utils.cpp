@@ -121,3 +121,22 @@ String Utils::fixPath(String path){
 
   return path;
 }
+
+
+// About StatusGen
+
+void StatusGen::addStatus(int8_t code, String mes){
+  States.add(String(code), String(mes));
+}
+
+void StatusGen::removeStatus(int8_t code){
+  States.remove(String(code));
+}
+
+String StatusGen::getMes(int8_t code){
+  return States.get(String(code));
+}
+
+String StatusGen::getArranged(int8_t code, String sep){
+  return String(code) + sep + States.get(String(code));
+}

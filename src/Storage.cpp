@@ -23,12 +23,40 @@ String Storage::readFile(String fn){
   File f = SD.open('/' + fn, FILE_READ);
 
   if(f.available()){
-    for(unsigned long i = 0; i < f.size() - 2; i++){
+    for(unsigned long i = 0; i < f.size(); i++){
       char c;
 
       f.seek(i);
       c = f.read();
       result = result + c;
+    }
+  }
+  return result;
+}
+
+String Storage::readLine(String fn, uint16_t lineNum){
+  String result = "";
+  File f = SD.open('/' + fn, FILE_READ);
+  uint16_t cnt = 0;
+
+  if(f.available()){
+    String line = "";
+
+    for(unsigned long i = 0; i < f.size(); i++){
+      char c;
+
+      f.seek(i);
+      c = f.read();
+      if(c != '\n'){
+        line += c;
+      }else{
+        result = line;
+        line = "";
+        if(cnt >= lineNum){
+          break;
+        }
+        cnt += 1;
+      }
     }
   }
   return result;
@@ -55,11 +83,10 @@ bool Storage::writeFile(String fn, String *data){
     mkdir(dirname);
   }
 
-  Serial.println(fn);
   f = SD.open('/' + fn, "w");
 
   if(f.available()){
-    f.println(*(data));
+    f.print(*(data));
     return true;
   }else{
     Serial.println("write failed");
@@ -87,4 +114,66 @@ bool Storage::checkActive(){
   result = readFile(fn);
   if(result.length() == text.length()) return true;
   else return false;
+}
+
+bool Storage::appendToFile(String fn, String *data, uint32_t pos){
+  if(!Available) return false;
+  String filename = "";
+  String dirname = "";
+  int64_t size = fileSize(fn);
+  File f;
+  File fr;
+
+  for(int i = 0; i < fn.length(); i++){
+    char c = fn[fn.length() - 1 - i];
+
+    if(c == '/'){
+      dirname = fn.substring(0, fn.length() - i - 1);
+      break;
+    }else{
+      filename = c + filename;
+    }
+  }
+
+  if(!exist(dirname)){
+    mkdir(dirname);
+  }
+
+  fr = SD.open('/' + fn, "r");
+  String last = "";
+  if(pos > 0 && pos < size){
+    fr.seek(pos);
+  }else if(pos > 0){
+    fr.seek(size - 1);
+    last = String(char(fr.read()));
+  }
+  fr.close();
+
+  f = SD.open('/' + fn, "w");
+  if(pos > 0 && pos < size){
+    f.seek(pos);
+  }else if(pos > 0){
+    f.seek(size - 1);
+  }
+
+  if(f.available()){
+    f.print(last + *(data));
+    return true;
+  }else{
+    Serial.println("write failed");
+    return false;
+  }
+}
+
+int64_t Storage::fileSize(String fn){
+  if(!Available) return -1;
+  File f;
+
+  f = SD.open('/' + fn, "r");
+
+  if(f.available()){
+    return f.size();
+  }else{
+    return -1;
+  }
 }

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <SD.h>
 #include <vector>
+#include <iostream>
 #include "WiFi.h"
 #include <HTTPClient.h>
 #include "freertos/FreeRTOS.h"
@@ -12,6 +13,7 @@
 #include "ESPIFFS.h"
 #include "Storage.h"
 #include "Rsa.h"
+#include "EasyPost.h"
 
 #include <string>
 #include <iostream>
@@ -28,6 +30,7 @@ ESPIFFS espiffs;
 std::vector<uint8_t> Ports = {80};
 Storage st(SDCS);
 Rsa rsa(5101, 4271);
+EasyPost ep(&st);
 
 void checkHeap(void *arg){
   while(true){
@@ -116,6 +119,121 @@ void QRGeneratorApiCallback(ChainArray queries, String *response){
   }
 }
 
+void easypostAddUserCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+
+  if(user != "" && password != ""){
+    if(!ep.statusCode() == 0){
+      *(response) = ep.addUser(user, password);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
+void easypostUpdatePassCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> old_passwordKeysFound = Utils.vector_find(keys, "old_password");
+  std::vector<uint8_t> new_passwordKeysFound = Utils.vector_find(keys, "new_password");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String old_password = old_passwordKeysFound.size() > 0 ? queries.get(keys[old_passwordKeysFound[0]]) : "";
+  String new_password = new_passwordKeysFound.size() > 0 ? queries.get(keys[new_passwordKeysFound[0]]) : "";
+
+  if(user != "" && old_password != "" && new_password != ""){
+    if(!ep.statusCode() == 0){
+      *(response) = ep.updatePassword(user, old_password, new_password);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
+void easypostAddTableCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  std::vector<uint8_t> tableNameKeysFound = Utils.vector_find(keys, "tablename");
+  std::vector<uint8_t> colsKeysFound = Utils.vector_find(keys, "cols");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+  String tableName = tableNameKeysFound.size() > 0 ? queries.get(keys[tableNameKeysFound[0]]) : "";
+  String cols = colsKeysFound.size() > 0 ? queries.get(keys[colsKeysFound[0]]) : "";
+  std::vector<String> colsVector;
+  uint8_t cnt = 0;
+
+  if(user != "" && password != "" && cols != ""){
+    while(true){
+      String block = Utils.split(cols, ',', cnt);
+
+      if(block != ""){
+        colsVector.push_back(block);
+      }else{
+        break;
+      }
+      cnt += 1;
+    }
+
+    if(ep.statusCode() != 0){
+      *(response) = ep.addTable(user, password, tableName, colsVector);
+    }else{
+      *(response) = ep.Status;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
+void easypostPostCallback(ChainArray queries, String *response){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  std::vector<uint8_t> tablenameKeysFound = Utils.vector_find(keys, "tablename");
+  std::vector<uint8_t> dataKeysFound = Utils.vector_find(keys, "data");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+  String tablename = tablenameKeysFound.size() > 0 ? queries.get(keys[tablenameKeysFound[0]]) : "";
+  String data = dataKeysFound.size() > 0 ? queries.get(keys[dataKeysFound[0]]) : "";
+  ChainArray dataObject;
+  uint16_t cnt = 0;
+
+  if(user != "" && password != "" && tablename != "" && data != ""){
+    while(true){
+      String block = Utils.split(data, ';', cnt);
+
+      if(block != ""){
+        dataObject.add(Utils.split(block, ':', 0), Utils.split(block, ':', 1));
+      }else{
+        break;
+      }
+      cnt += 1;
+    }
+
+    std::vector<String> keys = dataObject.keys();
+
+    for(int i = 0; i < keys.size(); i++){
+      if(dataObject.get(keys[i]) == ""){
+        dataObject.add(keys[i], "None");
+      }
+
+      Serial.print(keys[i] + ": ");
+      Serial.println(dataObject.get(keys[i]));
+    }
+
+    *(response) = ep.post(user, password, tablename, dataObject);
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
@@ -134,6 +252,10 @@ void setup(){
     return;
   }
 
+  // Serial.println(st.readLine("easyPost/shinoda/test.ep", 0));
+
+  // return;
+
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
   startAP();
@@ -147,7 +269,7 @@ void setup(){
     }
   }
 
-  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 16384, NULL, 1, NULL, 1);
+  xTaskCreatePinnedToCore(checkHeap, "checkHeap", 4096, NULL, 1, NULL, 1);
 
   Html emptyApi("Empty", empty);
   Html reflectionApi(String(" "), reflectionApiCallback);
@@ -155,6 +277,10 @@ void setup(){
   Html serviceAddApi(String(""), addApiCallback);
   Html serviceRemoveApi(String(""), removeApiCallback);
   Html servicesQRGenarator(String(""), QRGeneratorApiCallback);
+  Html servicesEasyPostAddUser(String(""), easypostAddUserCallback);
+  Html servicesEasyPostUpdatePass(String(""), easypostUpdatePassCallback);
+  Html servicesEasyPostAddTable(String(""), easypostAddTableCallback);
+  Html servicesEasyPostPost(String(""), easypostPostCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -164,6 +290,10 @@ void setup(){
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
   ServerObject.setResponse(80, "/services/removeapi", &serviceRemoveApi);
   ServerObject.setResponse(80, "/services/qrgen", &servicesQRGenarator);
+  ServerObject.setResponse(80, "/services/easypost/adduser", &servicesEasyPostAddUser);
+  ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
+  ServerObject.setResponse(80, "/services/easypost/addtable", &servicesEasyPostAddTable);
+  ServerObject.setResponse(80, "/services/easypost/post", &servicesEasyPostPost);
   ServerObject.openAllServers();
 }
 
