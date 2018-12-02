@@ -99,20 +99,26 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.println(Servers[serverPos].Responses.size());
 
           if(Servers[serverPos].Responses.size() == 0){
-            sendGetResponse(&client, notFoundResp, "404");
+            sendGetResponse(&client, "404");
+            sendGetResponse(&client, notFoundResp);
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
                 String respHtml = Servers[serverPos].Responses[i].response;
 
                 Servers[serverPos].Responses[i].prevCallback(queries, &respHtml);
-                sendGetResponse(&client, respHtml, "200");
+                sendGetResponseHeader(&client, "200");
+                sendGetResponse(&client, respHtml);
                 break;
               }
-              if(i == Servers[serverPos].Responses.size() - 1) sendGetResponse(&client, notFoundResp, "404");
+              if(i == Servers[serverPos].Responses.size() - 1){
+                sendGetResponseHeader(&client, "404");
+                sendGetResponse(&client, notFoundResp);
+              }
             }
           }
 
+          client.stop();
           request.clear();
           queries.clear();
         }
@@ -121,25 +127,22 @@ void ServerObject::requestHandle_proc(uint8_t port){
   }
 }
 
-void ServerObject::sendGetResponse(WiFiClient *client, String html, String status){
-  String contentLength = String(html.length());
+void ServerObject::sendGetResponseHeader(WiFiClient *client, String status){
   String newLine = "\r\n";
   String response = "";
 
-  response += "HTTP/1.1 " + status + " OK" + newLine;
-  response += "Content-Length: " + contentLength + newLine;
-  response += "Connection: close" + newLine;
+  response += "HTTP/1.0 " + status + " OK" + newLine;
   response += "Content-Type: text/html" + newLine + newLine;
 
   for(int i = 0; i < response.length(); i++){
     client->print(response[i]);
   }
+}
 
+void ServerObject::sendGetResponse(WiFiClient *client, String html){
   for(int i = 0; i < html.length(); i++){
     client->print(html[i]);
   }
-
-  client->stop();
 }
 
 void ServerObject::setResponse(uint8_t port, String url, Html *response){

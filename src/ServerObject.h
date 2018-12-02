@@ -27,7 +27,8 @@ class ServerObject{
     void addServer_proc(uint8_t port);
     void openServer_proc(uint8_t port);
     void requestHandle_proc(uint8_t port);
-    void sendGetResponse(WiFiClient *client, String html, String status);
+    void sendGetResponseHeader(WiFiClient *client, String status);
+    void sendGetResponse(WiFiClient *client, String html);
     struct Response{
       String url;
       String response;
