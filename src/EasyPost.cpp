@@ -114,8 +114,6 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
         std::vector<String> inputKeys = data.keys();
         uint8_t cnt = 0;
 
-        Serial.println(indexStr);
-
         while(true){
           String block = utils->split(indexStr, char(0x03), cnt);
 
@@ -150,6 +148,30 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
   }
 }
 
-// String EasyPost::get(String user, String pass){
+String EasyPost::get(String user, String pass, String tablename, uint32_t start, uint32_t length){
+  String userPath = "easypost/" + user;
 
-// }
+  if(st->exist(userPath)){
+    String password = st->readFile(userPath + "/password.ep");
+
+    if(password == pass){
+      String tablePath = userPath + "/" + tablename + ".ep";
+
+      if(st->exist(tablePath)){
+        String result = RespCode.getArranged(1, ": ");
+
+        for(int i = 0; i < length; i++){
+          result += st->readLine(tablePath, start += i + 1);
+        }
+
+        return result;
+      }else{
+        return RespCode.getArranged(-5, ": ");
+      }
+    }else{
+      return RespCode.getArranged(-4, ": ");
+    }
+  }else{
+    return RespCode.getArranged(-3, ": ");
+  }
+}

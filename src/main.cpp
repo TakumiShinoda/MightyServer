@@ -234,6 +234,32 @@ void easypostPostCallback(ChainArray queries, String *response, WiFiClient *clie
   }
 }
 
+void easypostGetCallback(ChainArray queries, String *response, WiFiClient *client){
+  std::vector<String> keys = queries.keys();
+  std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
+  std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
+  std::vector<uint8_t> tablenameKeysFound = Utils.vector_find(keys, "tablename");
+  std::vector<uint8_t> startKeysFound = Utils.vector_find(keys, "start");
+  std::vector<uint8_t> lengthKeysFound = Utils.vector_find(keys, "length");
+  String user = userKeysFound.size() > 0 ? queries.get(keys[userKeysFound[0]]) : "";
+  String password = passwordKeysFound.size() > 0 ? queries.get(keys[passwordKeysFound[0]]) : "";
+  String tablename = tablenameKeysFound.size() > 0 ? queries.get(keys[tablenameKeysFound[0]]) : "";
+  String start = startKeysFound.size() > 0 ? queries.get(keys[startKeysFound[0]]) : "";
+  String length = lengthKeysFound.size() > 0 ? queries.get(keys[lengthKeysFound[0]]) : "";
+  uint32_t cnt = 0;
+
+  if(user != "" && password != "" && tablename != "" && start != "" && length != ""){
+    while(cnt < length.toInt()){
+      String read = ep.get(user, password, tablename, start.toInt() + cnt, 5);
+
+      client->print(read);
+      cnt += 5;
+    }
+  }else{
+    *(response) = "0: Params shortage";
+  }
+}
+
 void setup(){
   Serial.begin(115200);
   delay(1000);
@@ -251,6 +277,11 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
+
+  // Serial.println(st.readLine("easypost/shinoda/test.ep", 2));
+  // Serial.println(st.readLine("easypost/shinoda/test.ep", 100));
+
+  // return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 
@@ -277,6 +308,7 @@ void setup(){
   Html servicesEasyPostUpdatePass(String(""), easypostUpdatePassCallback);
   Html servicesEasyPostAddTable(String(""), easypostAddTableCallback);
   Html servicesEasyPostPost(String(""), easypostPostCallback);
+  Html servicesEasyPostGet(String(""), easypostGetCallback);
 
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
@@ -290,6 +322,7 @@ void setup(){
   ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
   ServerObject.setResponse(80, "/services/easypost/addtable", &servicesEasyPostAddTable);
   ServerObject.setResponse(80, "/services/easypost/post", &servicesEasyPostPost);
+  ServerObject.setResponse(80, "/services/easypost/get", &servicesEasyPostGet);
   ServerObject.openAllServers();
 }
 
