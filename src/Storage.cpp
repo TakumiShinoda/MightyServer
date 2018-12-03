@@ -50,15 +50,16 @@ String Storage::readLine(String fn, uint16_t lineNum){
       if(c != '\n'){
         line += c;
       }else{
-        result = line;
-        line = "";
         if(cnt >= lineNum){
+          result = line;
           break;
         }
+        line = "";
         cnt += 1;
       }
     }
   }
+
   return result;
 }
 
