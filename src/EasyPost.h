@@ -23,7 +23,7 @@ class EasyPost{
     int8_t statusCode();
     String addTable(String user, String pass, String tableName, std::vector<String> cols);
     String post(String user, String pass, String _tablePath, ChainArray data);
-    String get(String user, String pass, String _tablePath, uint32_t start, uint32_t length);
+    String get(String user, String pass, String _tablePath, uint32_t start, uint8_t length);
 };
 
 #endif

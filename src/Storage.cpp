@@ -34,32 +34,35 @@ String Storage::readFile(String fn){
   return result;
 }
 
-String Storage::readLine(String fn, uint16_t lineNum){
+String Storage::readLine(String fn, uint16_t lineNum, uint8_t length){
   String result = "";
   File f = SD.open('/' + fn, FILE_READ);
-  uint16_t cnt = 0;
+  uint16_t lineCnt = 0;
+  uint16_t savedCnt = 0;
 
   if(f.available()){
     String line = "";
 
     for(unsigned long i = 0; i < f.size(); i++){
       char c;
-
       f.seek(i);
       c = f.read();
-      if(c != '\n'){
-        line += c;
-      }else{
-        if(cnt >= lineNum){
-          result = line;
-          break;
+
+      if(c == '\n'){
+        if(lineCnt >= lineNum){
+          result += line + "\n";
+          savedCnt += 1;
+          if(savedCnt == length){
+            break;
+          }
         }
         line = "";
-        cnt += 1;
+        lineCnt += 1;
+      }else{
+        line += c;
       }
     }
   }
-
   return result;
 }
 

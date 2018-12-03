@@ -278,8 +278,8 @@ void setup(){
     return;
   }
 
-  // Serial.println(st.readLine("easypost/shinoda/test.ep", 2));
-  // Serial.println(st.readLine("easypost/shinoda/test.ep", 100));
+  // Serial.println(st.readLine("easypost/shinoda/test.ep", 0, 100));
+  // // Serial.println(st.readLine("easypost/shinoda/test.ep", 100));
 
   // return;
 

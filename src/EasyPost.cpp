@@ -148,7 +148,7 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
   }
 }
 
-String EasyPost::get(String user, String pass, String tablename, uint32_t start, uint32_t length){
+String EasyPost::get(String user, String pass, String tablename, uint32_t start, uint8_t length){
   String userPath = "easypost/" + user;
 
   if(st->exist(userPath)){
@@ -160,10 +160,7 @@ String EasyPost::get(String user, String pass, String tablename, uint32_t start,
       if(st->exist(tablePath)){
         String result = RespCode.getArranged(1, ": ");
 
-        for(int i = 0; i < length; i++){
-          result += st->readLine(tablePath, start += i + 1);
-        }
-
+        result += st->readLine(tablePath, start + 1, length);
         return result;
       }else{
         return RespCode.getArranged(-5, ": ");

@@ -13,7 +13,7 @@ class Storage{
     bool begin();
     bool available();
     String readFile(String fn);
-    String readLine(String fn, uint16_t lineNum = 0);
+    String readLine(String fn, uint16_t lineNum = 0, uint8_t length = 1);
     bool writeFile(String fn, String *data);
     bool appendToFile(String fn, String *data, uint32_t pos = 0);
     bool exist(String fn);
