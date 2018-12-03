@@ -1,6 +1,6 @@
 #include "Html.h"
 
-Html::Html(String html, void (*prev)(ChainArray, String*)){
+Html::Html(String html, void (*prev)(ChainArray, String*, WiFiClient*)){
   htmlObj.html = html;
   htmlObj.prev = prev;
 }

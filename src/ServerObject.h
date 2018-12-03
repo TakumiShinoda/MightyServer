@@ -28,11 +28,11 @@ class ServerObject{
     void openServer_proc(uint8_t port);
     void requestHandle_proc(uint8_t port);
     void sendGetResponseHeader(WiFiClient *client, String status);
-    void sendGetResponse(WiFiClient *client, String html);
+    void sendGetResponseBody(WiFiClient *client, String html);
     struct Response{
       String url;
       String response;
-      void (*prevCallback)(ChainArray, String*);
+      void (*prevCallback)(ChainArray, String*, WiFiClient*);
     };
     struct Server{
       uint8_t port;

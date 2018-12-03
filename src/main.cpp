@@ -40,10 +40,10 @@ void checkHeap(void *arg){
   }
 }
 
-void empty(ChainArray params, String *respHtml){
+void empty(ChainArray params, String *respHtml, WiFiClient *client){
 }
 
-void reflectionApiCallback(ChainArray params, String *respHtml){
+void reflectionApiCallback(ChainArray params, String *respHtml, WiFiClient *client){
   std::vector<String> paramsKeys = params.keys();
   std::vector<uint8_t> keyHostFinds = Utils.vector_find(paramsKeys, String("host"));
   std::vector<uint8_t> keyUriFinds = Utils.vector_find(paramsKeys, String("uri"));
@@ -66,11 +66,11 @@ void reflectionApiCallback(ChainArray params, String *respHtml){
   httpCode > 0 ? *(respHtml) = http.getString() : *(respHtml) = "Failed";
 }
 
-void fromESPIFFS(ChainArray params, String *path){
+void fromESPIFFS(ChainArray params, String *path, WiFiClient *client){
   *(path) = espiffs.readFile(*(path));
 }
 
-void addApiCallback(ChainArray queries, String *response){
+void addApiCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> htmlKeysFound = Utils.vector_find(keys, "html");
   std::vector<uint8_t> pathKeysFound = Utils.vector_find(keys, "path");
@@ -87,7 +87,7 @@ void addApiCallback(ChainArray queries, String *response){
   }
 }
 
-void removeApiCallback(ChainArray queries, String *response){
+void removeApiCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> pathKeysFound = Utils.vector_find(keys, "path");
   std::vector<uint8_t> portKeysFound = Utils.vector_find(keys, "port");
@@ -106,7 +106,7 @@ void removeApiCallback(ChainArray queries, String *response){
   }
 }
 
-void QRGeneratorApiCallback(ChainArray queries, String *response){
+void QRGeneratorApiCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> dataKeysFound = Utils.vector_find(keys, "data");
   String data = dataKeysFound.size() > 0 ? queries.get(keys[dataKeysFound[0]]) : "";
@@ -119,7 +119,7 @@ void QRGeneratorApiCallback(ChainArray queries, String *response){
   }
 }
 
-void easypostAddUserCallback(ChainArray queries, String *response){
+void easypostAddUserCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
   std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
@@ -137,7 +137,7 @@ void easypostAddUserCallback(ChainArray queries, String *response){
   }
 }
 
-void easypostUpdatePassCallback(ChainArray queries, String *response){
+void easypostUpdatePassCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
   std::vector<uint8_t> old_passwordKeysFound = Utils.vector_find(keys, "old_password");
@@ -157,7 +157,7 @@ void easypostUpdatePassCallback(ChainArray queries, String *response){
   }
 }
 
-void easypostAddTableCallback(ChainArray queries, String *response){
+void easypostAddTableCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
   std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
@@ -192,7 +192,7 @@ void easypostAddTableCallback(ChainArray queries, String *response){
   }
 }
 
-void easypostPostCallback(ChainArray queries, String *response){
+void easypostPostCallback(ChainArray queries, String *response, WiFiClient *client){
   std::vector<String> keys = queries.keys();
   std::vector<uint8_t> userKeysFound = Utils.vector_find(keys, "user");
   std::vector<uint8_t> passwordKeysFound = Utils.vector_find(keys, "password");
@@ -251,10 +251,6 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
-
-  // Serial.println(st.readLine("easyPost/shinoda/test.ep", 0));
-
-  // return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 

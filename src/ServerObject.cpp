@@ -99,21 +99,22 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.println(Servers[serverPos].Responses.size());
 
           if(Servers[serverPos].Responses.size() == 0){
-            sendGetResponse(&client, "404");
-            sendGetResponse(&client, notFoundResp);
+            sendGetResponseHeader(&client, "404");
+            sendGetResponseBody(&client, notFoundResp);
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
                 String respHtml = Servers[serverPos].Responses[i].response;
 
-                Servers[serverPos].Responses[i].prevCallback(queries, &respHtml);
-                sendGetResponseHeader(&client, "200");
-                sendGetResponse(&client, respHtml);
+                sendGetResponseHeader(&client, queries.get("ResponseStatus"));
+                Servers[serverPos].Responses[i].prevCallback(queries, &respHtml, &client);
+                sendGetResponseBody(&client, respHtml);
                 break;
               }
               if(i == Servers[serverPos].Responses.size() - 1){
                 sendGetResponseHeader(&client, "404");
-                sendGetResponse(&client, notFoundResp);
+                sendGetResponseBody(&client, notFoundResp);
+                break;
               }
             }
           }
@@ -139,7 +140,7 @@ void ServerObject::sendGetResponseHeader(WiFiClient *client, String status){
   }
 }
 
-void ServerObject::sendGetResponse(WiFiClient *client, String html){
+void ServerObject::sendGetResponseBody(WiFiClient *client, String html){
   for(int i = 0; i < html.length(); i++){
     client->print(html[i]);
   }
