@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <array>
 #include <vector>
+#include <regex>
+#include <string>
 #include "ChainArray.h"
 
 class StatusGen{
@@ -25,6 +27,8 @@ class Utils{
     std::vector<uint8_t> vector_find(std::vector<String> target, String str);
     String ints2utf8(std::vector<uint8_t> data);
     String fixPath(String path);
+    bool checkFormat(std::string target, char c, std::vector<bool> rule);
+    String decodeUrl(String input);
 };
 
 #endif

@@ -43,6 +43,11 @@ void checkHeap(void *arg){
 void empty(ChainArray params, String *respHtml, WiFiClient *client){
 }
 
+void testApiCallback(ChainArray params, String *respHtml, WiFiClient *client){
+  Serial.println(Utils.decodeUrl(params.get("test")));
+  *(respHtml) = Utils.decodeUrl(params.get("test"));
+}
+
 void reflectionApiCallback(ChainArray params, String *respHtml, WiFiClient *client){
   std::vector<String> paramsKeys = params.keys();
   std::vector<uint8_t> keyHostFinds = Utils.vector_find(paramsKeys, String("host"));
@@ -299,6 +304,7 @@ void setup(){
   xTaskCreatePinnedToCore(checkHeap, "checkHeap", 4096, NULL, 1, NULL, 1);
 
   Html emptyApi("Empty", empty);
+  Html testApi(String(""), testApiCallback);
   Html reflectionApi(String(" "), reflectionApiCallback);
   Html addApiPage("/addApi.html", fromESPIFFS);
   Html serviceAddApi(String(""), addApiCallback);
@@ -313,6 +319,7 @@ void setup(){
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
   ServerObject.setResponse(80, "/empty", &emptyApi);
+  ServerObject.setResponse(80, "/test", &testApi);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);

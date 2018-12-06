@@ -122,6 +122,59 @@ String Utils::fixPath(String path){
   return path;
 }
 
+bool Utils::checkFormat(std::string target, char c, std::vector<bool> rule){
+  if(target.length() != rule.size()) return false;
+
+  for(int i = 0; i < target.size(); i++){
+    if((target[i] != c) == rule[i]) return false;
+  }
+
+  return true;
+}
+
+String Utils::decodeUrl(String input){
+  String result = "";
+  unsigned long cnt = 0;
+
+  while(true){
+    if(cnt >= input.length()) break;
+    if(input[cnt] == '%' && cnt + 3 < input.length() && input[cnt + 1] != '%' && input[cnt + 2] != '%'){
+      std::vector<std::string> codes;
+      std::vector<uint8_t> ints;
+      uint8_t skip = 0;
+
+      for(int i = 0; i < 9; i += 3){
+        std::string block;
+        block += input[cnt + i];
+        block += input[cnt + i + 1];
+        block += input[cnt + i + 2];
+
+        if(checkFormat(block, '%', {1, 0, 0})){
+          codes.push_back(block);
+        }else{
+          break;
+        }
+        skip = i;
+      }
+
+      for(int i = 0; i < codes.size(); i++){
+        unsigned int n;
+
+        sscanf(std::regex_replace(codes[i], std::regex("%"), "0x").c_str(), "%x", &n);
+        ints.push_back(n);
+      }
+
+      result += ints2utf8(ints);
+      cnt += skip + 3;
+    }else{
+      result += input[cnt];
+      cnt += 1;
+    }
+  }
+
+  return result;
+}
+
 
 // About StatusGen
 
