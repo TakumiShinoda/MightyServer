@@ -254,10 +254,28 @@ void easypostGetCallback(ChainArray queries, String *response, WiFiClient *clien
   uint32_t cnt = 0;
 
   if(user != "" && password != "" && tablename != "" && start != "" && length != ""){
-    while(cnt < length.toInt()){
-      String read = ep.get(user, password, tablename, start.toInt() + cnt, 5);
+    bool error = false;
 
-      client->print(read);
+    while(cnt < length.toInt()){
+      String read = "";
+      String readStatus = "";
+      String readData = "";
+
+      if(length.toInt() >= 5){
+        read = ep.get(user, password, tablename, start.toInt() + cnt, 5);
+      }else{
+        read = ep.get(user, password, tablename, start.toInt() + cnt, length.toInt() - cnt);
+      }
+
+      readStatus = Utils.split(read, char(0x02), 0);
+      readData = Utils.split(read, char(0x02), 1);
+
+      if(readStatus == "1: Success" && readData != ""){
+        client->print(readData);
+      }else{
+        error = true;
+        break;
+      }
       cnt += 5;
     }
   }else{
@@ -282,11 +300,6 @@ void setup(){
     Serial.println("SD is not activate");
     return;
   }
-
-  // Serial.println(st.readLine("easypost/shinoda/test.ep", 0, 100));
-  // // Serial.println(st.readLine("easypost/shinoda/test.ep", 100));
-
-  // return;
 
   Serial.println((char)rsa.decryption(rsa.encryption('a')));
 

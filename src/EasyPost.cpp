@@ -158,7 +158,7 @@ String EasyPost::get(String user, String pass, String tablename, uint32_t start,
       String tablePath = userPath + "/" + tablename + ".ep";
 
       if(st->exist(tablePath)){
-        String result = RespCode.getArranged(1, ": ");
+        String result = RespCode.getArranged(1, ": ") + char(0x02);
 
         result += st->readLine(tablePath, start + 1, length);
         return result;
