@@ -161,7 +161,9 @@ String EasyPost::get(String user, String pass, String tablename, uint32_t start,
         String result = RespCode.getArranged(1, ": ") + char(0x02);
 
         result += st->readLine(tablePath, start + 1, length);
-        return result;
+        std::string test(result.c_str());
+        test = std::regex_replace(test, std::regex(String(char(0x03)).c_str()), ",");
+        return String(test.c_str());
       }else{
         return RespCode.getArranged(-5, ": ");
       }

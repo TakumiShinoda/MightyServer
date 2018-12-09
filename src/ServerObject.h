@@ -8,6 +8,10 @@
 #include "Utils.h"
 #include "Html.h"
 
+#define RESPTYPE_HTML "text/html"
+#define RESPTYPE_JSON "application/json"
+#define RESPTYPE_CSV "text/csv"
+
 class Html;
 class Utils;
 class ServerObject{
@@ -19,7 +23,7 @@ class ServerObject{
     void openAllServers();
     void requestHandle(uint8_t port);
     void requestHandle(std::vector<uint8_t> ports);
-    void setResponse(uint8_t port, String url, Html *response);
+    void setResponse(uint8_t port, String url, Html *response, String respType = RESPTYPE_HTML);
     void setNotFound(String resp);
     bool removeResponse(uint8_t port, String path);
 
@@ -27,21 +31,23 @@ class ServerObject{
     void addServer_proc(uint8_t port);
     void openServer_proc(uint8_t port);
     void requestHandle_proc(uint8_t port);
-    void sendGetResponseHeader(WiFiClient *client, String status);
+    void sendGetResponseHeader(WiFiClient *client, String status, String respType);
     void sendGetResponseBody(WiFiClient *client, String html);
     struct Response{
       String url;
       String response;
+      String respType;
       void (*prevCallback)(ChainArray, String*, WiFiClient*);
     };
     struct Server{
       uint8_t port;
       WiFiServer server;
       std::vector<struct Response> Responses;
-      void setResponse(String url, Html *response){
+      void setResponse(String url, Html *response, String respType){
         struct Response resObj;
         Html *test = response;
 
+        resObj.respType = respType;
         resObj.url = url;
         resObj.response = response->getHtml();
         resObj.prevCallback = response->htmlObj.prev;
@@ -55,10 +61,11 @@ class ServerObject{
         }
         return result;
       };
-      void updateResponse(String url, Html *response){
+      void updateResponse(String url, Html *response, String respType){
         int16_t objIndex = findPath(url);
 
         if(objIndex >= 0){
+          Responses[objIndex].respType = respType;
           Responses[objIndex].url = url;
           Responses[objIndex].response = response->getHtml();
           Responses[objIndex].prevCallback = response->htmlObj.prev;

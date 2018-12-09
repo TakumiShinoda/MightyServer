@@ -44,8 +44,7 @@ void empty(ChainArray params, String *respHtml, WiFiClient *client){
 }
 
 void testApiCallback(ChainArray params, String *respHtml, WiFiClient *client){
-  Serial.println(Utils.decodeUrl(params.get("test")));
-  *(respHtml) = Utils.decodeUrl(params.get("test"));
+  *(respHtml) = R"({"k1":"v1", "k2":42, "k3":["a",123,true,false,null]})";
 }
 
 void reflectionApiCallback(ChainArray params, String *respHtml, WiFiClient *client){
@@ -254,8 +253,6 @@ void easypostGetCallback(ChainArray queries, String *response, WiFiClient *clien
   uint32_t cnt = 0;
 
   if(user != "" && password != "" && tablename != "" && start != "" && length != ""){
-    bool error = false;
-
     while(cnt < length.toInt()){
       String read = "";
       String readStatus = "";
@@ -273,7 +270,6 @@ void easypostGetCallback(ChainArray queries, String *response, WiFiClient *clien
       if(readStatus == "1: Success" && readData != ""){
         client->print(readData);
       }else{
-        error = true;
         break;
       }
       cnt += 5;
@@ -332,7 +328,7 @@ void setup(){
   ServerObject.setNotFound(espiffs.readFile("/404.html"));
   ServerObject.addServer(80);
   ServerObject.setResponse(80, "/empty", &emptyApi);
-  ServerObject.setResponse(80, "/test", &testApi);
+  ServerObject.setResponse(80, "/test", &testApi, RESPTYPE_CSV);
   ServerObject.setResponse(80, "/admin/addapi", &addApiPage);
   ServerObject.setResponse(80, "/reflect", &reflectionApi);
   ServerObject.setResponse(80, "/services/addapi", &serviceAddApi);
@@ -342,7 +338,7 @@ void setup(){
   ServerObject.setResponse(80, "/services/easypost/updatepassword", &servicesEasyPostUpdatePass);
   ServerObject.setResponse(80, "/services/easypost/addtable", &servicesEasyPostAddTable);
   ServerObject.setResponse(80, "/services/easypost/post", &servicesEasyPostPost);
-  ServerObject.setResponse(80, "/services/easypost/get", &servicesEasyPostGet);
+  ServerObject.setResponse(80, "/services/easypost/get", &servicesEasyPostGet, RESPTYPE_CSV);
   ServerObject.openAllServers();
 }
 

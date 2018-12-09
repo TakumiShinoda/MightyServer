@@ -99,20 +99,20 @@ void ServerObject::requestHandle_proc(uint8_t port){
           Serial.println(Servers[serverPos].Responses.size());
 
           if(Servers[serverPos].Responses.size() == 0){
-            sendGetResponseHeader(&client, "404");
+            sendGetResponseHeader(&client, "404", RESPTYPE_HTML);
             sendGetResponseBody(&client, notFoundResp);
           }else{
             for(int i = 0; i < Servers[serverPos].Responses.size(); i++){
               if(path == Servers[serverPos].Responses[i].url){
                 String respHtml = Servers[serverPos].Responses[i].response;
 
-                sendGetResponseHeader(&client, queries.get("ResponseStatus"));
+                sendGetResponseHeader(&client, queries.get("ResponseStatus"), Servers[serverPos].Responses[i].respType);
                 Servers[serverPos].Responses[i].prevCallback(queries, &respHtml, &client);
                 sendGetResponseBody(&client, respHtml);
                 break;
               }
               if(i == Servers[serverPos].Responses.size() - 1){
-                sendGetResponseHeader(&client, "404");
+                sendGetResponseHeader(&client, "404", RESPTYPE_HTML);
                 sendGetResponseBody(&client, notFoundResp);
                 break;
               }
@@ -128,12 +128,12 @@ void ServerObject::requestHandle_proc(uint8_t port){
   }
 }
 
-void ServerObject::sendGetResponseHeader(WiFiClient *client, String status){
+void ServerObject::sendGetResponseHeader(WiFiClient *client, String status, String respType){
   String newLine = "\r\n";
   String response = "";
 
   response += "HTTP/1.0 " + status + " OK" + newLine;
-  response += "Content-Type: text/html" + newLine + newLine;
+  response += "Content-Type: " + respType + newLine + newLine;
 
   for(int i = 0; i < response.length(); i++){
     client->print(response[i]);
@@ -146,13 +146,13 @@ void ServerObject::sendGetResponseBody(WiFiClient *client, String html){
   }
 }
 
-void ServerObject::setResponse(uint8_t port, String url, Html *response){
+void ServerObject::setResponse(uint8_t port, String url, Html *response, String respType){
   for(int i = 0; i < Servers.size(); i++){
     if(Servers[i].port == port){
       if(Servers[i].findPath(url) >= 0){
-        Servers[i].updateResponse(url, response);
+        Servers[i].updateResponse(url, response, respType);
       }else{
-        Servers[i].setResponse(url, response);
+        Servers[i].setResponse(url, response, respType);
       }
       break;
     }

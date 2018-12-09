@@ -2,6 +2,8 @@
 #define EasyPost_h
 
 #include <Arduino.h>
+#include <regex>
+#include <string>
 #include "Storage.h"
 #include "ChainArray.h"
 #include "Utils.h"
