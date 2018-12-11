@@ -50,6 +50,7 @@ String Storage::readLine(String fn, uint16_t lineNum, uint8_t length){
 
       if(c == '\n'){
         if(lineCnt >= lineNum){
+          // line = line.substring(0, line.length() - 1);
           result += line + "\n";
           savedCnt += 1;
           if(savedCnt == length){

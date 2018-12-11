@@ -76,6 +76,7 @@ String EasyPost::addTable(String user, String pass, String tableName, std::vecto
       Serial.println(cols[i]);
       tableHeader += cols[i] + sep;
     }
+    tableHeader = tableHeader.substring(0, tableHeader.length() - 1);
     tableHeader += '\n';
 
     Serial.println(tableHeader);
@@ -104,12 +105,12 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
   if(st->exist(userPath)){
     String password = st->readFile(userPath + "/password.ep");
     String tablePath = userPath + "/" + _tablePath + ".ep";
-    Serial.println(tablePath);
 
     if(password == pass){
       if(st->exist(tablePath)){
         String result = "";
         String indexStr = st->readLine(tablePath);
+        indexStr = indexStr.substring(0, indexStr.length() - 1);
         std::vector<String> indexs;
         std::vector<String> inputKeys = data.keys();
         uint8_t cnt = 0;
@@ -126,7 +127,11 @@ String EasyPost::post(String user, String pass, String _tablePath, ChainArray da
         }
 
         for(int i = 0; i < indexs.size(); i++){
-          result += data.get(indexs[i]) + String(char(0x03));
+          if(i >= indexs.size() - 1){
+            result += data.get(indexs[i]);
+          }else{
+            result += data.get(indexs[i]) + String(char(0x03));
+          }
         }
         result += '\n';
 
